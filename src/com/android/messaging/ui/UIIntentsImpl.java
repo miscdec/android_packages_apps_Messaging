@@ -33,10 +33,12 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Intents;
 import android.provider.MediaStore;
 import android.provider.Telephony;
+import android.text.TextUtils;
+
 import androidx.annotation.Nullable;
 import androidx.core.app.TaskStackBuilder;
+import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import android.text.TextUtils;
 
 import com.android.ex.photo.Intents.PhotoViewIntentBuilder;
 import com.android.messaging.R;
@@ -67,7 +69,6 @@ import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ConversationIdSet;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
-import com.android.messaging.util.UriUtil;
 
 /**
  * A central repository of Intents used to start activities.
@@ -266,12 +267,27 @@ public class UIIntentsImpl extends UIIntents {
     @Override
     public void launchPhoneCallActivity(final Context context, final String phoneNumber,
                                         final Point clickPosition) {
-        final Intent intent = new Intent(Intent.ACTION_CALL,
-                Uri.parse(UriUtil.SCHEME_TEL + phoneNumber));
-        final Bundle extras = new Bundle();
-        extras.putParcelable(CALL_TARGET_CLICK_KEY, clickPosition);
-        intent.putExtra(CALL_TARGET_CLICK_EXTRA_KEY, extras);
-        startExternalActivity(context, intent);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE)
+//                    != PackageManager.PERMISSION_GRANTED) {
+//                ActivityCompat.requestPermissions(UiUtils.getActivity(context),new String[]{Manifest.permission.CALL_PHONE},1);
+//            }
+//
+//        }
+//        if(ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE)
+//                == PackageManager.PERMISSION_GRANTED){
+//            final Intent intent = new Intent(Intent.ACTION_CALL,
+//                    Uri.parse(UriUtil.SCHEME_TEL + phoneNumber));
+//            final Bundle extras = new Bundle();
+//            extras.putParcelable(CALL_TARGET_CLICK_KEY, clickPosition);
+//            intent.putExtra(CALL_TARGET_CLICK_EXTRA_KEY, extras);
+//            startExternalActivity(context, intent);
+//        }else {
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phoneNumber));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        ContextCompat.startActivity(context, intent, Bundle.EMPTY);
+//        }
+
     }
 
     @Override
