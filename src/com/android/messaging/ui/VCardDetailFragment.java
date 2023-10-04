@@ -15,7 +15,6 @@
  */
 package com.android.messaging.ui;
 
-import android.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
@@ -31,14 +30,16 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
+import androidx.fragment.app.Fragment;
+
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.MediaScratchFileProvider;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.data.PersonItemData;
-import com.android.messaging.datamodel.data.VCardContactItemData;
 import com.android.messaging.datamodel.data.PersonItemData.PersonItemDataListener;
+import com.android.messaging.datamodel.data.VCardContactItemData;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.SafeAsyncTask;
 import com.android.messaging.util.UiUtils;

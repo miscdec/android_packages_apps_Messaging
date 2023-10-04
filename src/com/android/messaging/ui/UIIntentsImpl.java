@@ -16,7 +16,6 @@
 package com.android.messaging.ui;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.ActivityNotFoundException;
@@ -38,6 +37,7 @@ import android.text.TextUtils;
 import androidx.annotation.Nullable;
 import androidx.core.app.TaskStackBuilder;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.ex.photo.Intents.PhotoViewIntentBuilder;

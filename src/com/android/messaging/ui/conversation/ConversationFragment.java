@@ -20,9 +20,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -39,18 +36,11 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Parcelable;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import androidx.core.text.BidiFormatter;
-import androidx.core.text.TextDirectionHeuristicsCompat;
-import androidx.appcompat.app.ActionBar;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import android.telephony.PhoneNumberUtils;
 import android.text.TextUtils;
 import android.view.ActionMode;
@@ -63,6 +53,18 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.core.text.BidiFormatter;
+import androidx.core.text.TextDirectionHeuristicsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
@@ -274,7 +276,77 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             }
     };
 
-    private final ActionMode.Callback mMessageActionModeCallback = new ActionMode.Callback() {
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_people_and_options) {
+            Assert.isTrue(mBinding.getData().getParticipantsLoaded());
+            UIIntents.get().launchPeopleAndOptionsActivity(getActivity(), mConversationId);
+            return true;
+        } else if (itemId == R.id.action_call) {
+            final String phoneNumber = mBinding.getData().getParticipantPhoneNumber();
+            Assert.notNull(phoneNumber);
+            // Can't make a call to emergency numbers using ACTION_CALL.
+            if (PhoneNumberUtils.isEmergencyNumber(phoneNumber)) {
+                UiUtils.showToast(R.string.disallow_emergency_call);
+            } else {
+                final View targetView = requireActivity().findViewById(R.id.action_call);
+                Point centerPoint;
+                if (targetView != null) {
+                    final int[] screenLocation = new int[2];
+                    targetView.getLocationOnScreen(screenLocation);
+                    final int centerX = screenLocation[0] + targetView.getWidth() / 2;
+                    final int centerY = screenLocation[1] + targetView.getHeight() / 2;
+                    centerPoint = new Point(centerX, centerY);
+                } else {
+                    // In the overflow menu, just use the center of the screen.
+                    final Display display =
+                            getActivity().getWindowManager().getDefaultDisplay();
+                    centerPoint = new Point(display.getWidth() / 2, display.getHeight() / 2);
+                }
+                UIIntents.get()
+                        .launchPhoneCallActivity(getActivity(), phoneNumber, centerPoint);
+            }
+            return true;
+        } else if (itemId == R.id.action_archive) {
+            mBinding.getData().archiveConversation(mBinding);
+            closeConversation(mConversationId);
+            return true;
+        } else if (itemId == R.id.action_unarchive) {
+            mBinding.getData().unarchiveConversation(mBinding);
+            return true;
+        } else if (itemId == R.id.action_settings) {
+            return true;
+        } else if (itemId == R.id.action_add_contact) {
+            final ParticipantData participant = mBinding.getData().getOtherParticipant();
+            Assert.notNull(participant);
+            final String destination = participant.getNormalizedDestination();
+            final Uri avatarUri = AvatarUriUtil.createAvatarUri(participant);
+            (new AddContactsConfirmationDialog(getActivity(), avatarUri, destination)).show();
+            return true;
+        } else if (itemId == R.id.action_delete) {
+            if (isReadyForAction()) {
+                new AlertDialog.Builder(getActivity())
+                        .setTitle(getResources().getQuantityString(
+                                R.plurals.delete_conversations_confirmation_dialog_title, 1))
+                        .setPositiveButton(R.string.delete_conversation_confirmation_button,
+                                new OnClickListener() {
+                                    @Override
+                                    public void onClick(final DialogInterface dialog,
+                                                        final int button) {
+                                        deleteConversation();
+                                    }
+                                })
+                        .setNegativeButton(R.string.delete_conversation_decline_button, null)
+                        .show();
+            } else {
+                warnOfMissingActionConditions(false /*sending*/,
+                        null /*commandToRunAfterActionConditionResolved*/);
+            }
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }    private final ActionMode.Callback mMessageActionModeCallback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(final ActionMode actionMode, final Menu menu) {
             if (mSelectedMessage == null) {
@@ -322,8 +394,10 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                         mHost.dismissActionMode();
                     }
                 } else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     getActivity().requestPermissions(
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
+                    }
                 }
                 return true;
             } else if (itemId == R.id.action_delete_message) {
@@ -764,75 +838,17 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == R.id.action_people_and_options) {
-            Assert.isTrue(mBinding.getData().getParticipantsLoaded());
-            UIIntents.get().launchPeopleAndOptionsActivity(getActivity(), mConversationId);
-            return true;
-        } else if (itemId == R.id.action_call) {
-            final String phoneNumber = mBinding.getData().getParticipantPhoneNumber();
-            Assert.notNull(phoneNumber);
-            // Can't make a call to emergency numbers using ACTION_CALL.
-            if (PhoneNumberUtils.isEmergencyNumber(phoneNumber)) {
-                UiUtils.showToast(R.string.disallow_emergency_call);
-            } else {
-                final View targetView = getActivity().findViewById(R.id.action_call);
-                Point centerPoint;
-                if (targetView != null) {
-                    final int screenLocation[] = new int[2];
-                    targetView.getLocationOnScreen(screenLocation);
-                    final int centerX = screenLocation[0] + targetView.getWidth() / 2;
-                    final int centerY = screenLocation[1] + targetView.getHeight() / 2;
-                    centerPoint = new Point(centerX, centerY);
-                } else {
-                    // In the overflow menu, just use the center of the screen.
-                    final Display display =
-                            getActivity().getWindowManager().getDefaultDisplay();
-                    centerPoint = new Point(display.getWidth() / 2, display.getHeight() / 2);
-                }
-                UIIntents.get()
-                        .launchPhoneCallActivity(getActivity(), phoneNumber, centerPoint);
-            }
-            return true;
-        } else if (itemId == R.id.action_archive) {
-            mBinding.getData().archiveConversation(mBinding);
-            closeConversation(mConversationId);
-            return true;
-        } else if (itemId == R.id.action_unarchive) {
-            mBinding.getData().unarchiveConversation(mBinding);
-            return true;
-        } else if (itemId == R.id.action_settings) {
-            return true;
-        } else if (itemId == R.id.action_add_contact) {
-            final ParticipantData participant = mBinding.getData().getOtherParticipant();
-            Assert.notNull(participant);
-            final String destination = participant.getNormalizedDestination();
-            final Uri avatarUri = AvatarUriUtil.createAvatarUri(participant);
-            (new AddContactsConfirmationDialog(getActivity(), avatarUri, destination)).show();
-            return true;
-        } else if (itemId == R.id.action_delete) {
-            if (isReadyForAction()) {
-                new AlertDialog.Builder(getActivity())
-                        .setTitle(getResources().getQuantityString(
-                                R.plurals.delete_conversations_confirmation_dialog_title, 1))
-                        .setPositiveButton(R.string.delete_conversation_confirmation_button,
-                                new OnClickListener() {
-                                    @Override
-                                    public void onClick(final DialogInterface dialog,
-                                                        final int button) {
-                                        deleteConversation();
-                                    }
-                                })
-                        .setNegativeButton(R.string.delete_conversation_decline_button, null)
-                        .show();
-            } else {
-                warnOfMissingActionConditions(false /*sending*/,
-                        null /*commandToRunAfterActionConditionResolved*/);
-            }
-            return true;
+    public void promptForSelfPhoneNumber() {
+        if (mComposeMessageView != null) {
+            // Avoid bug in system which puts soft keyboard over dialog after orientation change
+            ImeUtil.hideSoftInput(requireActivity(), mComposeMessageView);
         }
-        return super.onOptionsItemSelected(item);
+
+        final FragmentTransaction ft = requireActivity().getSupportFragmentManager().beginTransaction();
+        final EnterSelfPhoneNumberDialog dialog = EnterSelfPhoneNumberDialog
+                .newInstance(getConversationSelfSubId());
+        dialog.setTargetFragment(this, 0/*requestCode*/);
+        dialog.show(ft, null/*tag*/);
     }
 
     /**
@@ -1213,19 +1229,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void promptForSelfPhoneNumber() {
-        if (mComposeMessageView != null) {
-            // Avoid bug in system which puts soft keyboard over dialog after orientation change
-            ImeUtil.hideSoftInput(getActivity(), mComposeMessageView);
-        }
 
-        final FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-        final EnterSelfPhoneNumberDialog dialog = EnterSelfPhoneNumberDialog
-                .newInstance(getConversationSelfSubId());
-        dialog.setTargetFragment(this, 0/*requestCode*/);
-        dialog.show(ft, null/*tag*/);
-    }
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {

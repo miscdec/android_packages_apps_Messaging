@@ -16,10 +16,8 @@
 
 package com.android.messaging.ui.appsettings;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import androidx.core.app.NavUtils;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -29,6 +27,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.core.app.NavUtils;
+import androidx.fragment.app.Fragment;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
@@ -64,7 +65,7 @@ public class SettingsActivity extends BugleActionBarActivity {
             UIIntents.get().launchApplicationSettingsActivity(this, true /* topLevel */);
             finish();
         } else {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                     .replace(android.R.id.content, new SettingsFragment())
                     .commit();
         }
@@ -72,8 +73,7 @@ public class SettingsActivity extends BugleActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-        case android.R.id.home:
+        if (item.getItemId() == android.R.id.home) {
             NavUtils.navigateUpFromSameTask(this);
             return true;
         }

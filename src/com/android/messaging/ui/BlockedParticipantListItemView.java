@@ -16,12 +16,13 @@
 package com.android.messaging.ui;
 
 import android.content.Context;
-import androidx.core.text.BidiFormatter;
-import androidx.core.text.TextDirectionHeuristicsCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.core.text.BidiFormatter;
+import androidx.core.text.TextDirectionHeuristicsCompat;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ParticipantListItemData;
@@ -42,6 +43,7 @@ public class BlockedParticipantListItemView extends LinearLayout {
 
     @Override
     protected void onFinishInflate() {
+        super.onFinishInflate();
         mNameTextView = (TextView) findViewById(R.id.name);
         mContactIconView = (ContactIconView) findViewById(R.id.contact_icon);
         setOnClickListener(new OnClickListener() {

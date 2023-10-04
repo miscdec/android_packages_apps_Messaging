@@ -17,15 +17,17 @@ package com.android.messaging.ui.conversationlist;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.action.DeleteConversationAction;
@@ -40,8 +42,6 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.contact.AddContactsConfirmationDialog;
 import com.android.messaging.ui.conversationlist.ConversationListFragment.ConversationListFragmentHost;
 import com.android.messaging.ui.conversationlist.MultiSelectActionModeCallback.SelectedConversation;
-import com.android.messaging.util.BugleGservices;
-import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.DebugUtils;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.Trace;
@@ -51,7 +51,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import javax.annotation.Nullable;
 
 /**
  * Base class for many Conversation List activities. This will handle the common actions of multi
@@ -65,7 +64,7 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
     protected ConversationListFragment mConversationListFragment;
 
     @Override
-    public void onAttachFragment(final Fragment fragment) {
+    public void onAttachFragment(@NonNull final Fragment fragment) {
         Trace.beginSection("AbstractConversationListActivity.onAttachFragment");
         // Fragment could be debug dialog
         if (fragment instanceof ConversationListFragment) {
@@ -106,6 +105,7 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

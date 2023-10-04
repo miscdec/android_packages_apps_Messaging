@@ -19,8 +19,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import androidx.appcompat.app.ActionBar;
 import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
@@ -38,6 +38,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.ActionBar;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
@@ -193,6 +195,7 @@ public class ComposeMessageView extends LinearLayout
 
     @Override
     protected void onFinishInflate() {
+        super.onFinishInflate();
         mComposeEditText = (PlainTextEditText) findViewById(
                 R.id.compose_message_text);
         mComposeEditText.setOnEditorActionListener(this);
@@ -205,7 +208,7 @@ public class ComposeMessageView extends LinearLayout
                 }
             }
         });
-        mComposeEditText.setOnClickListener(new View.OnClickListener() {
+        mComposeEditText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View arg0) {
                 if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
@@ -216,9 +219,9 @@ public class ComposeMessageView extends LinearLayout
 
         // onFinishInflate() is called before self is loaded from db. We set the default text
         // limit here, and apply the real limit later in updateOnSelfSubscriptionChange().
-        mComposeEditText.setFilters(new InputFilter[] {
+        mComposeEditText.setFilters(new InputFilter[]{
                 new LengthFilter(MmsConfig.get(ParticipantData.DEFAULT_SELF_SUB_ID)
-                        .getMaxTextLimit()) });
+                        .getMaxTextLimit())});
 
         if (PrefsUtils.isShowEmoticonsEnabled()) {
             mComposeEditText.setInputType(mComposeEditText.getInputType()
@@ -258,7 +261,7 @@ public class ComposeMessageView extends LinearLayout
         mComposeSubjectText.addTextChangedListener(this);
         // onFinishInflate() is called before self is loaded from db. We set the default text
         // limit here, and apply the real limit later in updateOnSelfSubscriptionChange().
-        mComposeSubjectText.setFilters(new InputFilter[] {
+        mComposeSubjectText.setFilters(new InputFilter[]{
                 new LengthFilter(MmsConfig.get(ParticipantData.DEFAULT_SELF_SUB_ID)
                         .getMaxSubjectLength())});
 
@@ -303,8 +306,8 @@ public class ComposeMessageView extends LinearLayout
                     event.getText().clear();
                     event.getText().add(getResources()
                             .getText(shouldShowSimSelector(mConversationDataModel.getData()) ?
-                            R.string.send_button_long_click_description_with_sim_selector :
-                                R.string.send_button_long_click_description_no_sim_selector));
+                                    R.string.send_button_long_click_description_with_sim_selector :
+                                    R.string.send_button_long_click_description_no_sim_selector));
                     // Make this an announcement so TalkBack will read our custom message.
                     event.setEventType(AccessibilityEvent.TYPE_ANNOUNCEMENT);
                 }
@@ -313,7 +316,7 @@ public class ComposeMessageView extends LinearLayout
 
         mAttachMediaButton =
                 (ImageButton) findViewById(R.id.attach_media_button);
-        mAttachMediaButton.setOnClickListener(new View.OnClickListener() {
+        mAttachMediaButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View clickView) {
                 // Showing the media picker is treated as starting to compose the message.
@@ -876,17 +879,12 @@ public class ComposeMessageView extends LinearLayout
 
     // Set accessibility traversal order of the components in the send widget.
     private void setSendWidgetAccessibilityTraversalOrder(final int mode) {
-        if (OsUtil.isAtLeastL_MR1()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
             mAttachMediaButton.setAccessibilityTraversalBefore(R.id.compose_message_text);
-            switch (mode) {
-                case SEND_WIDGET_MODE_SIM_SELECTOR:
-                    mComposeEditText.setAccessibilityTraversalBefore(R.id.self_send_icon);
-                    break;
-                case SEND_WIDGET_MODE_SEND_BUTTON:
-                    mComposeEditText.setAccessibilityTraversalBefore(R.id.send_message_button);
-                    break;
-                default:
-                    break;
+            if (mode == SEND_WIDGET_MODE_SIM_SELECTOR) {
+                mComposeEditText.setAccessibilityTraversalBefore(R.id.self_send_icon);
+            } else if (mode == SEND_WIDGET_MODE_SEND_BUTTON) {
+                mComposeEditText.setAccessibilityTraversalBefore(R.id.send_message_button);
             }
         }
     }

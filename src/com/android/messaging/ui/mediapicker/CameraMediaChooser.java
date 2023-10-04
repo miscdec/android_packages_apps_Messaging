@@ -280,13 +280,17 @@ class CameraMediaChooser extends MediaChooser implements
 
     @Override
     protected void onRequestPermissionsResult(
-            final int requestCode, final String permissions[], final int[] grantResults) {
+            final int requestCode, final String[] permissions, final int[] grantResults) {
         if (requestCode == MediaPicker.CAMERA_PERMISSION_REQUEST_CODE) {
-            final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-            updateForPermissionState(permissionGranted);
-            if (permissionGranted) {
-                mCameraPreviewHost.onCameraPermissionGranted();
+            if (grantResults.length != 0) {
+                final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                updateForPermissionState(permissionGranted);
+                if (permissionGranted) {
+                    mCameraPreviewHost.onCameraPermissionGranted();
+                }
             }
+
+
         } else if (requestCode == MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE) {
             Assert.isFalse(CameraManager.get().isVideoMode());
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {

@@ -18,9 +18,10 @@ package com.android.messaging.ui.conversationlist;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.appcompat.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import androidx.appcompat.app.ActionBar;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
@@ -134,7 +135,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
     public void onWindowFocusChanged(final boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         final ConversationListFragment conversationListFragment =
-                (ConversationListFragment) getFragmentManager().findFragmentById(
+                (ConversationListFragment) getSupportFragmentManager().findFragmentById(
                         R.id.conversation_list_fragment);
         // When the screen is turned on, the last used activity gets resumed, but it gets
         // window focus only after the lock screen is unlocked.

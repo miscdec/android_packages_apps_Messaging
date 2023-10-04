@@ -16,16 +16,19 @@
 
 package com.android.messaging.datamodel.data;
 
-import android.app.LoaderManager;
+
 import android.content.Context;
-import android.content.Loader;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteFullException;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.loader.app.LoaderManager;
+import androidx.loader.content.Loader;
 
 import com.android.common.contacts.DataUsageStatUpdater;
 import com.android.messaging.Factory;
@@ -180,6 +183,7 @@ public class ConversationData extends BindableData {
      * A trampoline class so that we can inherit from LoaderManager.LoaderCallbacks multiple times.
      */
     private class MetadataLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cursor> {
+        @NonNull
         @Override
         public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
             Assert.equals(CONVERSATION_META_DATA_LOADER, id);
