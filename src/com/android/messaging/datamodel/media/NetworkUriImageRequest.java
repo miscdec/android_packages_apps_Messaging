@@ -19,6 +19,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import androidx.exifinterface.media.ExifInterface;
+
 import com.android.messaging.Factory;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
@@ -39,7 +41,7 @@ public class NetworkUriImageRequest<D extends UriImageRequestDescriptor> extends
 
     public NetworkUriImageRequest(Context context, D descriptor) {
         super(context, descriptor);
-        mOrientation = android.media.ExifInterface.ORIENTATION_UNDEFINED;
+        mOrientation = ExifInterface.ORIENTATION_UNDEFINED;
     }
 
     @Override

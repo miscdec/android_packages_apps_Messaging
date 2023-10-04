@@ -18,9 +18,10 @@ package com.android.messaging.datamodel.media;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.media.ExifInterface;
 import android.support.rastermill.FrameSequence;
 import android.support.rastermill.FrameSequenceDrawable;
+
+import androidx.exifinterface.media.ExifInterface;
 
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.LogUtil;

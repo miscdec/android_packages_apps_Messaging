@@ -26,9 +26,10 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.text.TextUtils;
+
+import androidx.exifinterface.media.ExifInterface;
 
 import com.android.messaging.R;
 import com.android.messaging.util.Assert;
@@ -158,8 +159,8 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
     }
 
     private Bitmap renderLetterTile(final String name, final int width, final int height) {
-        final float halfWidth = width / 2;
-        final float halfHeight = height / 2;
+        final float halfWidth = (float) width / 2;
+        final float halfHeight = (float) height / 2;
         final int minOfWidthAndHeight = Math.min(width, height);
         final Bitmap bitmap = getBitmapPool().createOrReuseBitmap(width, height,
                 getBackgroundColor(AvatarUriUtil.getIdentifier(mDescriptor.uri)));
