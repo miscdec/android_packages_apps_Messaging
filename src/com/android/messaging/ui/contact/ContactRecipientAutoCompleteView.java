@@ -24,7 +24,6 @@ import android.text.TextPaint;
 import android.text.TextWatcher;
 import android.text.util.Rfc822Tokenizer;
 import android.util.AttributeSet;
-import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
@@ -102,7 +101,7 @@ public class ContactRecipientAutoCompleteView extends RecipientEditTextView {
     private static final String TEXT_HEIGHT_SAMPLE = "a";
 
     public ContactRecipientAutoCompleteView(final Context context, final AttributeSet attrs) {
-        super(new ContextThemeWrapper(), attrs);
+        super(context, attrs);
 
         // Get the height of the text, given the currently set font face and size.
         final Rect textBounds = new Rect(0, 0, 0, 0);
