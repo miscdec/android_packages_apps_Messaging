@@ -84,22 +84,22 @@ public class ConversationListActivity extends AbstractConversationListActivity {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem menuItem) {
-        switch(menuItem.getItemId()) {
-            case R.id.action_start_new_conversation:
-                onActionBarStartNewConversation();
-                return true;
-            case R.id.action_settings:
-                onActionBarSettings();
-                return true;
-            case R.id.action_debug_options:
-                onActionBarDebug();
-                return true;
-            case R.id.action_show_archived:
-                onActionBarArchived();
-                return true;
-            case R.id.action_show_blocked_contacts:
-                onActionBarBlockedParticipants();
-                return true;
+        int itemId = menuItem.getItemId();
+        if (itemId == R.id.action_start_new_conversation) {
+            onActionBarStartNewConversation();
+            return true;
+        } else if (itemId == R.id.action_settings) {
+            onActionBarSettings();
+            return true;
+        } else if (itemId == R.id.action_debug_options) {
+            onActionBarDebug();
+            return true;
+        } else if (itemId == R.id.action_show_archived) {
+            onActionBarArchived();
+            return true;
+        } else if (itemId == R.id.action_show_blocked_contacts) {
+            onActionBarBlockedParticipants();
+            return true;
         }
         return super.onOptionsItemSelected(menuItem);
     }

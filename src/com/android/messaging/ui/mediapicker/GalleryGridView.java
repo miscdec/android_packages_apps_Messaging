@@ -165,16 +165,15 @@ public class GalleryGridView extends MediaPickerGridView implements
     }
 
     public boolean onOptionsItemSelected(final MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_multiselect:
-                Assert.isTrue(canToggleMultiSelect());
-                toggleMultiSelect();
-                return true;
-
-            case R.id.action_confirm_multiselect:
-                Assert.isTrue(!canToggleMultiSelect());
-                mListener.onConfirmSelection();
-                return true;
+        int itemId = item.getItemId();
+        if (itemId == R.id.action_multiselect) {
+            Assert.isTrue(canToggleMultiSelect());
+            toggleMultiSelect();
+            return true;
+        } else if (itemId == R.id.action_confirm_multiselect) {
+            Assert.isTrue(!canToggleMultiSelect());
+            mListener.onConfirmSelection();
+            return true;
         }
         return false;
     }
