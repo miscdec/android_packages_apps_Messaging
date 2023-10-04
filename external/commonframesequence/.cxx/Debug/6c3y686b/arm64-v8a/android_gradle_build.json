@@ -1,0 +1,46 @@
+{
+  "buildFiles": [
+    "/run/media/administrator/Data/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/src/main/cpp/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/administrator/Android/Sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/run/media/administrator/Data/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/.cxx/Debug/6c3y686b/arm64-v8a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/administrator/Android/Sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/run/media/administrator/Data/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/.cxx/Debug/6c3y686b/arm64-v8a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "framesequence::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "framesequence",
+      "output": "/run/media/administrator/Data/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/build/intermediates/cxx/Debug/6c3y686b/obj/arm64-v8a/libframesequence.so",
+      "runtimeFiles": []
+    },
+    "gif::@6890427a1f51a3e7e1df": {
+      "toolchain": "toolchain",
+      "abi": "arm64-v8a",
+      "artifactName": "gif",
+      "output": "/run/media/administrator/Data/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/.cxx/Debug/6c3y686b/arm64-v8a/libgif.a"
+    }
+  },
+  "toolchains": {
+    "toolchain": {
+      "cCompilerExecutable": "/home/administrator/Android/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/linux-x86_64/bin/clang.lld",
+      "cppCompilerExecutable": "/home/administrator/Android/Sdk/ndk/21.0.6113669/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++.lld"
+    }
+  },
+  "cFileExtensions": [
+    "c"
+  ],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

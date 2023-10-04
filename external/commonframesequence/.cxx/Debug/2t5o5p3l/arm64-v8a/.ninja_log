@@ -1,0 +1,17 @@
+# ninja log v5
+3	46	1696397583832941400	CMakeFiles/gif.dir/gif/openbsd-reallocarray.c.o	b3e73c5a4c83276c
+2	74	1696397583859608300	CMakeFiles/gif.dir/gif/gif_err.c.o	42a7036289d2dcf1
+1	80	1696397583866275000	CMakeFiles/framesequence.dir/FrameSequence.cpp.o	ba6f6b532da82fb
+2	83	1696397583869608400	CMakeFiles/gif.dir/gif/gifalloc.c.o	560b15b87228937e
+3	85	1696397583869608400	CMakeFiles/gif.dir/gif/gif_hash.c.o	1c41a456ef298900
+1	85	1696397583869608400	CMakeFiles/framesequence.dir/Registry.cpp.o	622065fab9df0d2d
+1	86	1696397583869608400	CMakeFiles/framesequence.dir/JNIHelpers.cpp.o	1ed2feb2dc30deb
+3	127	1696397583912942100	CMakeFiles/gif.dir/gif/quantize.c.o	91431ba2b437e286
+2	129	1696397583916275500	CMakeFiles/framesequence.dir/Stream.cpp.o	2bf67eccb052b7cd
+1	148	1696397583932942300	CMakeFiles/framesequence.dir/FrameSequenceJNI.cpp.o	ccbf275fad802c0b
+1	152	1696397583939609000	CMakeFiles/framesequence.dir/FrameSequence_gif.cpp.o	19c2a81dacca6169
+1	161	1696397583946275700	CMakeFiles/framesequence.dir/BitmapDecoderJNI.cpp.o	5726c903c30a36e3
+2	178	1696397583966275900	CMakeFiles/gif.dir/gif/egif_lib.c.o	5100599951f80767
+2	182	1696397583969609300	CMakeFiles/gif.dir/gif/dgif_lib.c.o	f7ad1a77c662581e
+182	210	1696397583999609600	libgif.a	80f87a97ddbebe6c
+210	274	1696397584062943500	/run/media/administrator/Data/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/build/intermediates/cxx/Debug/2t5o5p3l/obj/arm64-v8a/libframesequence.so	81dc6e8b4a2e98bc

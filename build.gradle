@@ -1,0 +1,165 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+plugins {
+    alias(libs.plugins.com.android.application)
+    alias(libs.plugins.org.jetbrains.kotlin.android)
+    alias(libs.plugins.com.android.library) apply false
+    // Root build.gradle
+    id("com.mikepenz.aboutlibraries.plugin") version "10.8.3"
+    id("com.google.devtools.ksp") version "1.9.10-1.0.13"
+
+
+}
+
+
+android {
+    compileSdk  = libs.versions.compileSdk.get().toInteger()
+    namespace "com.android.messaging"
+    defaultConfig {
+        applicationId "com.android.messaging"
+        minSdkVersion 21
+        targetSdkVersion libs.versions.targetSdk.get().toString()
+        versionCode = libs.versions.verCode.get().toInteger()
+        versionName  = libs.versions.verName.get()
+        multiDexEnabled = true
+        externalNativeBuild {
+            cmake {
+            }
+        }
+        vectorDrawables {
+            useSupportLibrary true
+        }
+    }
+    sourceSets {
+            main {
+                manifest.srcFile 'AndroidManifest.xml'
+                java.srcDirs = ['src'] // NOTE: this includes external/ex/common/java!
+                resources.srcDirs = ['src']
+                aidl.srcDirs = ['src']
+                renderscript.srcDirs = ['src']
+                res.srcDirs = ['res']
+                assets.srcDirs = ['assets']
+                jniLibs.srcDirs = ['jni']
+        }
+    }
+    externalNativeBuild {
+        cmake {
+            path "jni/CMakeLists.txt"
+        }
+    }
+    ndkVersion '21.0.6113669'
+    signingConfigs {
+        aosp {
+            // Generated from the AOSP platform key:
+            // https://android.googlesource.com/platform/build/+/refs/tags/android-11.0.0_r29/target/product/security/platform.pk8
+            keyAlias "platform"
+            keyPassword "platform"
+            storeFile file("platform.jks")
+            storePassword "platform"
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.aosp
+        }
+        debug {
+            signingConfig signingConfigs.aosp
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+    buildFeatures {
+        compose = true
+        viewBinding = true
+    }
+    viewBinding {
+        enabled = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion libs.versions.compose.compiler.version.get()
+    }
+    packaging {
+        resources {
+            excludes += '/META-INF/{AL2.0,LGPL2.1}'
+        }
+    }
+    lint {
+        abortOnError false
+    }
+}
+
+dependencies {
+    implementation project(':external:common')
+    implementation project(':external:commonframesequence')
+    implementation project(':external:vcard')
+    implementation project(':external:chips')
+    implementation project(':external:photoviewer')
+    implementation project(':external:colorpicker')
+
+    implementation(platform(libs.kotlin.bom))
+
+    implementation(libs.androidx.multidex)
+    implementation(libs.androidx.preference)
+    implementation libs.androidx.annotation
+    implementation libs.core.ktx
+    implementation libs.androidx.media
+//    implementation libs.androidx.legacy.support.core.utils
+//    implementation libs.androidx.legacy.support.core.ui
+//    implementation libs.androidx.fragment
+//    implementation libs.androidx.legacy.support.v13
+//    api (libs.material)
+    implementation libs.appcompat
+    implementation libs.androidx.palette
+    implementation libs.androidx.recyclerview
+    implementation libs.androidx.exifinterface
+
+
+
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation(libs.androidx.room.ktx)
+
+    implementation libs.activity.compose
+
+    implementation platform(libs.compose.bom)
+    implementation libs.ui
+    implementation libs.ui.graphics
+    implementation libs.ui.tooling.preview
+    implementation(libs.ui.viewbinding)
+    implementation libs.ui.material3
+    implementation(libs.androidx.material.icons.extended)
+    implementation(libs.androidx.material.icons.extended.android)
+    debugImplementation libs.ui.tooling
+    debugImplementation libs.ui.test.manifest
+    androidTestImplementation platform(libs.compose.bom)
+    androidTestImplementation libs.ui.test.junit4
+
+    implementation(libs.androidx.navigation.compose)
+
+    implementation libs.lifecycle.runtime.ktx
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
+    implementation(libs.aboutlibraries.core)
+    implementation(libs.aboutlibraries.compose)
+
+    implementation libs.compose.settings.ui.m3
+    implementation libs.compose.settings.storage.preferences
+
+    api libs.guava
+    api libs.libphonenumber
+    api libs.geocoder
+    api libs.prefixmapper
+    api libs.carrier
+
+
+}
+
+

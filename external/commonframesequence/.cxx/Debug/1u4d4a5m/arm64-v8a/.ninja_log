@@ -1,0 +1,15 @@
+# ninja log v5
+2	1933	7123980857307867	CMakeFiles/framesequence.dir/BitmapDecoderJNI.cpp.o	30546116d76e78dc
+78	1982	7123980856796112	CMakeFiles/framesequence.dir/FrameSequenceJNI.cpp.o	8d51cea31f144fa9
+250	1996	7123980857958056	CMakeFiles/framesequence.dir/FrameSequence.cpp.o	21ee72984a89c0f
+362	2008	7123980860295034	CMakeFiles/framesequence.dir/Stream.cpp.o	bb917b46d9a8a535
+492	2024	7123980861070201	CMakeFiles/framesequence.dir/Registry.cpp.o	c7d15cb9062f1b1f
+657	2036	7123980861447643	CMakeFiles/framesequence.dir/JNIHelpers.cpp.o	a88480468a435bdf
+846	2095	7123980866265277	CMakeFiles/gif.dir/gif/dgif_lib.c.o	dacf18b43ba65386
+1263	2133	7123980866841383	CMakeFiles/gif.dir/gif/gifalloc.c.o	2f3bfbf2710671f7
+1055	2202	7123980867601724	CMakeFiles/gif.dir/gif/egif_lib.c.o	c701daa311d333a7
+1408	2230	7123980867955047	CMakeFiles/gif.dir/gif/gif_err.c.o	444fcb9522454e4
+1645	2279	7123980868468324	CMakeFiles/gif.dir/gif/openbsd-reallocarray.c.o	c997a0922c33a324
+1531	2303	7123980868728883	CMakeFiles/gif.dir/gif/gif_hash.c.o	1d6b5d8aab6da077
+1775	2368	7123980869373558	CMakeFiles/gif.dir/gif/quantize.c.o	4683be5461ba8d49
+58	563	7123981188257008	libgif.a	6cdcf4d64d8af167

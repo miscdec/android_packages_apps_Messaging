@@ -1,0 +1,125 @@
+[versions]
+compileSdk = "34"
+targetSdk = "34"
+verCode = "10001190"
+verName = "1.1.19.0"
+
+com-android-application = "8.1.2"
+com-android-library = "8.1.2"
+kotlin = "1.9.10"
+
+compose-bom = "2023.09.02"
+compose-compiler-version = "1.5.3"
+
+core-ktx = "1.12.0"
+palette = "1.0.0"
+exifinterface = "1.3.6"
+annotation = "1.7.0"
+media = "1.6.0"
+multidex = "2.0.1"
+preference = "1.2.1"
+recyclerview = "1.3.1"
+appcompat = "1.6.1"
+material = "1.9.0"
+constraintlayout = "2.1.4"
+roomRuntime = "2.5.2"
+lifecycle-runtime-ktx = "2.6.2"
+
+activity-compose = "1.7.2"
+materialIconsExtended = "1.5.2"
+
+aboutlibrariesCompose = "10.9.1"
+composeSettingsUiM3 = "1.0.2"
+
+
+
+carrier = "1.206"
+geocoder = "2.216"
+guava = "28.2-android"
+libphonenumber = "8.13.22"
+
+junit = "4.13.2"
+androidx-test-ext-junit = "1.1.5"
+espresso-core = "3.5.1"
+
+navigation = "2.7.3"
+
+
+snapper = "0.3.0"
+
+[libraries]
+
+aboutlibraries-compose = { module = "com.mikepenz:aboutlibraries-compose", version.ref = "aboutlibrariesCompose" }
+aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutlibrariesCompose" }
+
+androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
+androidx-exifinterface = { module = "androidx.exifinterface:exifinterface", version.ref = "exifinterface" }
+
+androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle-runtime-ktx" }
+androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle-runtime-ktx" }
+
+androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+androidx-material-icons-extended-android = { module = "androidx.compose.material:material-icons-extended-android", version.ref = "materialIconsExtended" }
+
+
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
+
+androidx-preference = { module = "androidx.preference:preference", version.ref = "preference" }
+
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
+
+compose-settings-storage-preferences = { module = "com.github.alorma:compose-settings-storage-preferences", version.ref = "composeSettingsUiM3" }
+compose-settings-ui-m3 = { module = "com.github.alorma:compose-settings-ui-m3", version.ref = "composeSettingsUiM3" }
+
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
+navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
+
+kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin"}
+
+androidx-media = { module = "androidx.media:media", version.ref = "media" }
+androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
+androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
+
+carrier = { module = "com.googlecode.libphonenumber:carrier", version.ref = "carrier" }
+geocoder = { module = "com.googlecode.libphonenumber:geocoder", version.ref = "geocoder" }
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
+libphonenumber = { module = "com.googlecode.libphonenumber:libphonenumber", version.ref = "libphonenumber" }
+prefixmapper = { module = "com.googlecode.libphonenumber:prefixmapper", version.ref = "geocoder" }
+
+
+snapper = { module = "dev.chrisbanes.snapper:snapper", version.ref = "snapper" }
+
+androidx-palette = { module = "androidx.palette:palette", version.ref = "palette" }
+
+lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
+
+activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
+
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+ui = { group = "androidx.compose.ui", name = "ui" }
+ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+ui-material3 = { group = "androidx.compose.material3", name = "material3" }
+ui-viewbinding = { module = "androidx.compose.ui:ui-viewbinding"}
+
+[plugins]
+com-android-application = { id = "com.android.application", version.ref = "com-android-application" }
+org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+com-android-library = { id = "com.android.library", version.ref = "com-android-library" }
+
+[bundles]
+

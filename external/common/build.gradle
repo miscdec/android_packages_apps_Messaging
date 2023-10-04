@@ -1,0 +1,22 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdk  = libs.versions.compileSdk.get().toInteger()
+    namespace "com.android.common"
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion libs.versions.targetSdk.get().toString()
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+implementation libs.androidx.annotation
+}

@@ -1,0 +1,4 @@
+/run/media/administrator/LInuxData/Github/android_packages_apps_Messaging/external/commonframesequence/.cxx/Debug/1s2g141y/x86/CMakeFiles/framesequence.dir
+/run/media/administrator/LInuxData/Github/android_packages_apps_Messaging/external/commonframesequence/.cxx/Debug/1s2g141y/x86/CMakeFiles/gif.dir
+/run/media/administrator/LInuxData/Github/android_packages_apps_Messaging/external/commonframesequence/.cxx/Debug/1s2g141y/x86/CMakeFiles/edit_cache.dir
+/run/media/administrator/LInuxData/Github/android_packages_apps_Messaging/external/commonframesequence/.cxx/Debug/1s2g141y/x86/CMakeFiles/rebuild_cache.dir

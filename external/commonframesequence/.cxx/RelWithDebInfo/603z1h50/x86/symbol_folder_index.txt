@@ -1,0 +1,1 @@
+/run/media/administrator/Data/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/build/intermediates/cxx/RelWithDebInfo/603z1h50/obj/x86

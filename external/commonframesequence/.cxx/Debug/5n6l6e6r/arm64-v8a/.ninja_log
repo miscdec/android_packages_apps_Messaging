@@ -1,0 +1,17 @@
+# ninja log v5
+0	749	7057021609278704	CMakeFiles/framesequence.dir/BitmapDecoderJNI.cpp.o	2b5e73d9397c8559
+35	752	7057021608803549	CMakeFiles/framesequence.dir/FrameSequence.cpp.o	ba760f0badfd808f
+69	753	7057021610000315	CMakeFiles/framesequence.dir/FrameSequence_gif.cpp.o	cad514d332085ce3
+118	754	7057021609808804	CMakeFiles/framesequence.dir/JNIHelpers.cpp.o	f1ad355663b189b0
+167	754	7057021610750644	CMakeFiles/framesequence.dir/FrameSequenceJNI.cpp.o	300cfc67d55b40bb
+217	755	7057021611146066	CMakeFiles/framesequence.dir/Stream.cpp.o	ce97a9d514cecdeb
+270	756	7057021611296068	CMakeFiles/framesequence.dir/Registry.cpp.o	e7ade2f8974ac19e
+323	757	7057021612822176	CMakeFiles/gif.dir/gif/egif_lib.c.o	3e59ddc893113d5e
+429	758	7057021613236277	CMakeFiles/gif.dir/gif/openbsd-reallocarray.c.o	eefb3f0863367cfc
+370	768	7057021613656109	CMakeFiles/gif.dir/gif/dgif_lib.c.o	1fb18b9b305ecd6a
+486	812	7057021614091234	CMakeFiles/gif.dir/gif/gif_hash.c.o	1d8e2c407e07d215
+555	845	7057021614451254	CMakeFiles/gif.dir/gif/gif_err.c.o	d6560d8af5c1bb74
+619	875	7057021614751230	CMakeFiles/gif.dir/gif/gifalloc.c.o	c64fe0fdf2cb326e
+679	909	7057021615086380	CMakeFiles/gif.dir/gif/quantize.c.o	a7be4cfded2136d9
+909	1043	7057021616463278	libgif.a	ffe01ae9205b0086
+1043	1210	7057021618083905	D:/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/build/intermediates/cxx/Debug/5n6l6e6r/obj/arm64-v8a/libframesequence.so	6a1e45f9c7464f78

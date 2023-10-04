@@ -1,0 +1,33 @@
+{
+  "buildFiles": [
+    "/run/media/administrator/Data/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/src/main/cpp/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/home/administrator/Android/Sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/run/media/administrator/Data/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/.cxx/Debug/6c3y686b/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/home/administrator/Android/Sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/run/media/administrator/Data/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/.cxx/Debug/6c3y686b/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "framesequence::@6890427a1f51a3e7e1df": {
+      "artifactName": "framesequence",
+      "abi": "x86",
+      "output": "/run/media/administrator/Data/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/build/intermediates/cxx/Debug/6c3y686b/obj/x86/libframesequence.so",
+      "runtimeFiles": []
+    },
+    "gif::@6890427a1f51a3e7e1df": {
+      "artifactName": "gif",
+      "abi": "x86",
+      "output": "/run/media/administrator/Data/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/.cxx/Debug/6c3y686b/x86/libgif.a",
+      "runtimeFiles": []
+    }
+  }
+}

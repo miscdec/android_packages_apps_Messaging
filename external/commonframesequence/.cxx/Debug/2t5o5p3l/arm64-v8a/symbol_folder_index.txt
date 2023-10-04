@@ -1,0 +1,1 @@
+/run/media/administrator/Data/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/build/intermediates/cxx/Debug/2t5o5p3l/obj/arm64-v8a
