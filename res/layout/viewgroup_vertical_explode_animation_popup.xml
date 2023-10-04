@@ -14,8 +14,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<view
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<view xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:viewBindingIgnore="true"
     class="com.android.messaging.ui.animation.ViewGroupItemVerticalExplodeAnimation$VerticalExplodePopupRootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
