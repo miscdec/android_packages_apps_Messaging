@@ -9,3 +9,6 @@
 /.idea/vcs.xml
 /build/*
 /.classpath
+/.idea/.gitignore
+/.editorconfig
+/platform.jks
