@@ -15,7 +15,6 @@
  */
 package com.android.messaging.ui.debug;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnShowListener;
@@ -30,6 +29,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.android.messaging.R;
 import com.android.messaging.sms.MmsConfig;

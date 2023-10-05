@@ -17,7 +17,6 @@
 package com.android.messaging.util;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -29,6 +28,8 @@ import android.os.Environment;
 import android.telephony.SmsMessage;
 import android.text.TextUtils;
 import android.widget.ArrayAdapter;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
@@ -221,7 +222,7 @@ public class DebugUtils {
             final FragmentTransaction ft = fragmentManager.beginTransaction();
             final DebugSmsMmsFromDumpFileDialogFragment dialog =
                     DebugSmsMmsFromDumpFileDialogFragment.newInstance(result, mAction);
-            dialog.show(fragmentManager, ""/*tag*/);
+            dialog.show(dialog.getFragmentManager(), ""/*tag*/);
         }
 
         @Override

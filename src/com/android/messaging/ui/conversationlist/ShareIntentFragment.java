@@ -16,8 +16,6 @@
 package com.android.messaging.ui.conversationlist;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -27,6 +25,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -86,7 +86,7 @@ public class ShareIntentFragment extends DialogFragment implements ConversationL
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
-        final Builder dialogBuilder = new AlertDialog.Builder(activity)
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(activity)
                 .setView(view)
                 .setTitle(R.string.share_intent_activity_label);
 
@@ -105,7 +105,7 @@ public class ShareIntentFragment extends DialogFragment implements ConversationL
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NonNull DialogInterface dialog) {
         if (!mDismissed) {
             final Activity activity = getActivity();
             if (activity != null) {
@@ -124,7 +124,7 @@ public class ShareIntentFragment extends DialogFragment implements ConversationL
     }
 
     @Override
-    public void onAttach(final Activity activity) {
+    public void onAttach(@NonNull final Activity activity) {
         super.onAttach(activity);
         if (activity instanceof HostInterface) {
             mHost = (HostInterface) activity;

@@ -15,12 +15,13 @@
  */
 package com.android.messaging.ui.appsettings;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.RadioButton;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.android.messaging.R;
 import com.android.messaging.util.Assert;

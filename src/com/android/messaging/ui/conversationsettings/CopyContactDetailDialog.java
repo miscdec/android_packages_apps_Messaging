@@ -15,7 +15,6 @@
  */
 package com.android.messaging.ui.conversationsettings;
 
-import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -23,6 +22,8 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.android.messaging.R;
 import com.android.messaging.util.AccessibilityUtil;

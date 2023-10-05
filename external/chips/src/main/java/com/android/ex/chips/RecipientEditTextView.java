@@ -19,8 +19,6 @@ package com.android.ex.chips;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.ClipboardManager;
@@ -50,7 +48,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Parcelable;
-import androidx.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.Layout;
@@ -87,10 +84,15 @@ import android.widget.Filterable;
 import android.widget.ListAdapter;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatMultiAutoCompleteTextView;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.fragment.app.DialogFragment;
 
 import com.android.ex.chips.DropdownChipLayouter.PermissionRequestDismissedListener;
 import com.android.ex.chips.RecipientAlternatesAdapter.RecipientMatchCallback;
@@ -112,7 +114,7 @@ import java.util.Set;
  * RecipientEditTextView is an auto complete text view for use with applications
  * that use the new Chips UI for addressing a message to recipients.
  */
-public class RecipientEditTextView extends MultiAutoCompleteTextView implements
+public class RecipientEditTextView extends AppCompatMultiAutoCompleteTextView implements
         OnItemClickListener, Callback, RecipientAlternatesAdapter.OnCheckedItemChangedListener,
         GestureDetector.OnGestureListener, TextView.OnEditorActionListener,
         DropdownChipLayouter.ChipDeleteListener, PermissionRequestDismissedListener {
@@ -828,11 +830,11 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
     private ChipBitmapContainer createChipBitmap(RecipientEntry contact, TextPaint paint,
             Drawable overrideBackgroundDrawable, int backgroundColor) {
         final ChipBitmapContainer result = new ChipBitmapContainer();
-
+        ;
         Drawable indicatorIcon = null;
         int indicatorPadding = 0;
         if (contact.getIndicatorIconId() != 0) {
-            indicatorIcon = getContext().getDrawable(contact.getIndicatorIconId());
+            indicatorIcon = ResourcesCompat.getDrawable(getResources(), contact.getIndicatorIconId(), getContext().getTheme());
             indicatorIcon.setBounds(0, 0,
                     indicatorIcon.getIntrinsicWidth(), indicatorIcon.getIntrinsicHeight());
             indicatorPadding = indicatorIcon.getBounds().width() + mChipTextEndPadding;
@@ -3417,7 +3419,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         }
 
         final DialogFragment fragment = CopyDialog.newInstance(address);
-        fragment.show(((Activity) context).getFragmentManager(), CopyDialog.TAG);
+        fragment.show(fragment.getFragmentManager(), CopyDialog.TAG);
     }
 
     @Override

@@ -15,7 +15,6 @@
  */
 package com.android.messaging.ui.contact;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
@@ -24,6 +23,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.ContactIconView;

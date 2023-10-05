@@ -17,7 +17,6 @@
 package com.android.messaging.ui;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
@@ -31,9 +30,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.Window;
 
+import androidx.appcompat.app.AlertDialog;
+
 import com.android.messaging.R;
-import com.android.messaging.datamodel.action.ReceiveSmsMessageAction;
 import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.datamodel.action.ReceiveSmsMessageAction;
 import com.android.messaging.util.Assert;
 
 import java.util.ArrayList;

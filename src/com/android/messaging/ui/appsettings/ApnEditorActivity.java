@@ -16,7 +16,6 @@
 
 package com.android.messaging.ui.appsettings;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -29,11 +28,13 @@ import android.preference.EditTextPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.provider.Telephony;
-import androidx.core.app.NavUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.NavUtils;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ParticipantData;

@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdk  = libs.versions.compileSdk.get().toInteger()
+    compileSdk = libs.versions.compileSdk.get().toInteger()
     namespace "com.android.common"
     defaultConfig {
         minSdkVersion 19
@@ -18,5 +18,7 @@ android {
 }
 
 dependencies {
-implementation libs.androidx.annotation
+    implementation libs.androidx.annotation
+    implementation(libs.core.ktx)
+    implementation(libs.appcompat)
 }

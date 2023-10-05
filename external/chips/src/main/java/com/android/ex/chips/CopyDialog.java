@@ -1,13 +1,15 @@
 package com.android.ex.chips;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 
 /**
  * Simple dialog fragment for copying the contents of a chip.
@@ -28,12 +30,13 @@ public class CopyDialog extends DialogFragment implements DialogInterface.OnClic
         return fragment;
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         final Bundle args = getArguments();
         mText = args.getString(ARG_TEXT);
 
-        return new AlertDialog.Builder(getActivity())
+        return new AlertDialog.Builder(requireActivity())
                 .setMessage(mText)
                 .setPositiveButton(R.string.chips_action_copy, this)
                 .setNegativeButton(R.string.chips_action_cancel, null)

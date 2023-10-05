@@ -16,12 +16,13 @@
 
 package com.android.messaging.ui.conversation;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.text.format.Formatter;
+
+import androidx.appcompat.app.AlertDialog;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;

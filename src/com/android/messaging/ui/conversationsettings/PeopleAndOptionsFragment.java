@@ -16,7 +16,6 @@
 package com.android.messaging.ui.conversationsettings;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,6 +32,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.loader.app.LoaderManager;
 
@@ -147,7 +147,7 @@ public class PeopleAndOptionsFragment extends Fragment
                     break;
                 }
                 final Resources res = getResources();
-                final Activity activity = getActivity();
+                final Activity activity = requireActivity();
                 new AlertDialog.Builder(activity)
                         .setTitle(res.getString(R.string.block_confirmation_title,
                                 item.getOtherParticipant().getDisplayDestination()))
