@@ -14,14 +14,12 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<com.android.messaging.ui.conversation.ComposeMessageView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.android.messaging.ui.conversation.ComposeMessageView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/message_compose_view_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <!-- Note it may seem off to have the layout_weight="1" on the compose bar and attachment view
      when it's the media picker that expands, but this is correct because weight also works when
@@ -155,7 +153,7 @@
                         android:layout_width="@dimen/conversation_message_contact_icon_size"
                         android:layout_height="@dimen/conversation_message_contact_icon_size"
                         android:importantForAccessibility="no"
-                        app:iconSize="normal"
+                        app:contactIconSize="normal"
                         app:reveal="true"
                         android:clickable="true" />
                     <ImageButton
