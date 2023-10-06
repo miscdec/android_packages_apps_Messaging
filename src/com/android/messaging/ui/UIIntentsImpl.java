@@ -69,6 +69,7 @@ import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ConversationIdSet;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
+import com.android.messaging2.ui.screen.search.SearchActivity;
 
 /**
  * A central repository of Intents used to start activities.
@@ -83,6 +84,8 @@ public class UIIntentsImpl extends UIIntents {
             "com.android.providers.media.MediaScannerService";
     private static final String MEDIA_SCANNER_PACKAGE = "com.android.providers.media";
     private static final String MEDIA_SCANNER_SCAN_ACTION = "android.media.IMediaScannerService";
+    public static final String COMPOSE_RECORDING_INDEX = "composeMessageIndex";
+    public static final String SEARCH_RESULT_INDEX_KEY = "searchResultIndex";
 
     /**
      * Get an intent which takes you to a conversation
@@ -591,5 +594,24 @@ public class UIIntentsImpl extends UIIntents {
         configureIntent.setData(Uri.parse(configureIntent.toUri(Intent.URI_INTENT_SCHEME)));
         configureIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_HISTORY);
         return getPendingIntentWithParentStack(context, configureIntent, 0);
+    }
+
+    @Override // com.android.messaging.ui.UIIntents
+    public void launchConversationActivityWithRecoding(Context context, String conversationId, int recodingIndex) {
+        TaskStackBuilder.create(context).addNextIntentWithParentStack(getConversationActivityIntent(context, conversationId, null, false).putExtra(UIIntents.COMPOSE_RECORDING_INDEX, recodingIndex)).startActivities();
+    }
+
+    @Override // com.android.messaging.ui.UIIntents
+    public void launchConversationActivityWithSearch(Context context, String conversationId, int index) {
+        Intent intent = getConversationActivityIntent(context, conversationId, null, false);
+        intent.putExtra(SEARCH_RESULT_INDEX_KEY, index);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void launchSearchActivity(Context context, Intent intent) {
+        Intent i = new Intent(context, SearchActivity.class);
+        i.putExtras(intent);
+        context.startActivity(i);
     }
 }

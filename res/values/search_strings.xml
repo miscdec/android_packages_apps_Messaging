@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources translatable="false">
+    <string name="action_start_search">Search</string>
+
+    <plurals name="search_results_title" translatable="false">
+        <item quantity="one">%1$s item matches“%2$s”search results</item>
+        <item quantity="other">%1$s items match“%2$s”search results</item>
+    </plurals>
+
+    <string name="search">Messaging</string>
+    <string name="search_empty">No matches.</string>
+    <string name="search_hint">Search messaging</string>
+    <string name="search_history">%1$s results for \"%2$s\"</string>
+    <string name="search_label">Messaging</string>
+    <string name="search_max_length">Search sentence is too long, will limited to 512.</string>
+    <string name="search_setting_description">Text in your messages</string>
+    <string name="title_activity_conversation">ConversationActivity</string>
+    <string name="title_activity_app_setting">AppSettingActivity</string>
+    <string name="show_emoticons_pref_key">pref_show_emoticons</string>
+    <string name="title_activity_application_settings">ApplicationSettingsActivity</string>
+    <string name="title_activity_per_subscription_settings">PerSubscriptionSettingsActivity</string>
+    <string name="title_activity_license">LicenseActivity</string>
+    <string name="title_activity_class_zero">ClassZeroActivity</string>
+    <string name="title_activity_people_and_options">PeopleAndOptionsActivity</string>
+    <string name="title_activity_blocked_participants">BlockedParticipantsActivity</string>
+
+</resources>

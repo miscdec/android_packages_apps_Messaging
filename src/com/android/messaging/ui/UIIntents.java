@@ -39,6 +39,8 @@ public abstract class UIIntents {
         return Factory.get().getUIIntents();
     }
 
+    public static final String COMPOSE_RECORDING_INDEX = "composeMessageIndex";
+
     // Intent extras
     public static final String UI_INTENT_EXTRA_CONVERSATION_ID = "conversation_id";
 
@@ -377,4 +379,9 @@ public abstract class UIIntents {
     public abstract PendingIntent getWidgetPendingIntentForConfigurationActivity(
             final Context context, final int appWidgetId);
 
+    public abstract void launchConversationActivityWithRecoding(Context context, String str, int i);
+
+    public abstract void launchConversationActivityWithSearch(Context context, String str, int i);
+
+    public abstract void launchSearchActivity(Context context, Intent intent);
 }

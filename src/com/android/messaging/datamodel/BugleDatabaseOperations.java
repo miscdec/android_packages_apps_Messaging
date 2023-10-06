@@ -23,9 +23,10 @@ import android.database.sqlite.SQLiteDoneException;
 import android.database.sqlite.SQLiteStatement;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
+import android.text.TextUtils;
+
 import androidx.collection.ArrayMap;
 import androidx.collection.SimpleArrayMap;
-import android.text.TextUtils;
 
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.DatabaseHelper.ConversationColumns;
@@ -55,6 +56,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
 import javax.annotation.Nullable;
 
 
@@ -1901,5 +1903,32 @@ public class BugleDatabaseOperations {
         }
         Assert.inRange(count, 0, 1);
         return (count >= 0);
+    }
+
+    public static Cursor queryMessage(DatabaseWrapper dbWrapper, String conversationId, String key) {
+        Assert.isNotMainThread();
+        StringBuilder selection = new StringBuilder();
+        selection.append("text Like '%").append(key).append("%' escape '\\' ");
+        if (!TextUtils.isEmpty(conversationId)) {
+            selection.append(" AND conversation_id = ").append(conversationId);
+        }
+        Assert.isTrue(dbWrapper.getDatabase().inTransaction());
+        return dbWrapper.query(DatabaseHelper.PARTS_TABLE, new String[]{"_id", "message_id", DatabaseHelper.PartColumns.TEXT, "conversation_id", "content_type", "timestamp"}, selection.toString(), null, null, null, "timestamp");
+    }
+
+    public static String getExistingConversationName(DatabaseWrapper dbWrapper, long threadId) {
+        Assert.isNotMainThread();
+        String conversationName = null;
+        try (Cursor cursor = dbWrapper.rawQuery("SELECT name FROM conversations WHERE sms_thread_id=" + threadId, null)) {
+            if (cursor.moveToFirst()) {
+                boolean z = true;
+                if (cursor.getCount() != 1) {
+                    z = false;
+                }
+                Assert.isTrue(z);
+                conversationName = cursor.getString(0);
+            }
+            return conversationName;
+        }
     }
 }

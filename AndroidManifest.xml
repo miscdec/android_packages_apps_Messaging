@@ -69,6 +69,12 @@
         android:theme="@style/BugleTheme"
         android:supportsRtl="true">
 
+        <activity
+            android:name="com.android.messaging2.ui.screen.search.SearchActivity"
+            android:exported="false"
+            android:label="@string/action_start_search"
+            android:theme="@style/BugleTheme" />
+
         <!-- Displays a list of conversations -->
         <activity
             android:name=".ui.conversationlist.ConversationListActivity"

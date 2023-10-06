@@ -604,7 +604,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * @return The current (or a new) DatabaseWrapper instance.
      */
     @DoesNotRunOnMainThread
-    DatabaseWrapper getDatabase() {
+    public DatabaseWrapper getDatabase() {
         // We prevent the main UI thread from accessing the database here since we have to allow
         // public access to this class to enable sub-packages to access data.
         Assert.isNotMainThread();
