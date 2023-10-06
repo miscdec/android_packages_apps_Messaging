@@ -109,6 +109,7 @@ dependencies {
     implementation libs.androidx.annotation
     implementation libs.core.ktx
     implementation libs.androidx.media
+    implementation(libs.androidx.fragment.ktx)
 //    implementation libs.androidx.legacy.support.core.utils
 //    implementation libs.androidx.legacy.support.core.ui
 //    implementation libs.androidx.fragment
@@ -118,8 +119,6 @@ dependencies {
     implementation libs.androidx.palette
     implementation libs.androidx.recyclerview
     implementation libs.androidx.exifinterface
-
-
 
     implementation(libs.androidx.room.runtime)
     ksp(libs.androidx.room.compiler)
@@ -134,8 +133,8 @@ dependencies {
     implementation libs.ui.tooling.preview
     implementation(libs.ui.viewbinding)
     implementation libs.ui.material3
-    implementation(libs.androidx.material.icons.extended)
-    implementation(libs.androidx.material.icons.extended.android)
+    implementation(libs.ui.material.icons.extended)
+    implementation(libs.ui.material.icons.extended.android)
     debugImplementation libs.ui.tooling
     debugImplementation libs.ui.test.manifest
     androidTestImplementation platform(libs.compose.bom)
@@ -144,6 +143,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     implementation libs.lifecycle.runtime.ktx
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.extensions)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
 
@@ -152,6 +153,9 @@ dependencies {
 
     implementation libs.compose.settings.ui.m3
     implementation libs.compose.settings.storage.preferences
+
+    // Kotlin coroutines
+    implementation(libs.copper.flow)
 
     api libs.guava
     api libs.libphonenumber

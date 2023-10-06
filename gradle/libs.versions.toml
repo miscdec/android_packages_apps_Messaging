@@ -24,14 +24,16 @@ material = "1.9.0"
 constraintlayout = "2.1.4"
 roomRuntime = "2.5.2"
 lifecycle-runtime-ktx = "2.6.2"
+fragmentKtx = "1.6.1"
+lifecycleExtensions = "2.2.0"
 
 activity-compose = "1.7.2"
-materialIconsExtended = "1.5.2"
+
 
 aboutlibrariesCompose = "10.9.1"
 composeSettingsUiM3 = "1.0.2"
 
-
+copperFlow = "1.0.0"
 
 carrier = "1.206"
 geocoder = "2.216"
@@ -45,8 +47,6 @@ espresso-core = "3.5.1"
 navigation = "2.7.3"
 
 
-snapper = "0.3.0"
-
 [libraries]
 
 aboutlibraries-compose = { module = "com.mikepenz:aboutlibraries-compose", version.ref = "aboutlibrariesCompose" }
@@ -55,11 +55,12 @@ aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 androidx-exifinterface = { module = "androidx.exifinterface:exifinterface", version.ref = "exifinterface" }
 
+androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
+androidx-lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "lifecycleExtensions" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle-runtime-ktx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle-runtime-ktx" }
+androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle-runtime-ktx" }
 
-androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
-androidx-material-icons-extended-android = { module = "androidx.compose.material:material-icons-extended-android", version.ref = "materialIconsExtended" }
 
 
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
@@ -73,6 +74,7 @@ androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "
 compose-settings-storage-preferences = { module = "com.github.alorma:compose-settings-storage-preferences", version.ref = "composeSettingsUiM3" }
 compose-settings-ui-m3 = { module = "com.github.alorma:compose-settings-ui-m3", version.ref = "composeSettingsUiM3" }
 
+copper-flow = { module = "app.cash.copper:copper-flow", version.ref = "copperFlow" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -98,8 +100,6 @@ libphonenumber = { module = "com.googlecode.libphonenumber:libphonenumber", vers
 prefixmapper = { module = "com.googlecode.libphonenumber:prefixmapper", version.ref = "geocoder" }
 
 
-snapper = { module = "dev.chrisbanes.snapper:snapper", version.ref = "snapper" }
-
 androidx-palette = { module = "androidx.palette:palette", version.ref = "palette" }
 
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
@@ -115,7 +115,8 @@ ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 ui-material3 = { group = "androidx.compose.material3", name = "material3" }
 ui-viewbinding = { module = "androidx.compose.ui:ui-viewbinding"}
-
+ui-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
+ui-material-icons-extended-android = { module = "androidx.compose.material:material-icons-extended-android" }
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "com-android-application" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
