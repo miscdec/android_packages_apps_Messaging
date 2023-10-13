@@ -45,6 +45,7 @@ androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 
 navigation = "2.7.3"
+workRuntimeKtx = "2.8.1"
 
 
 [libraries]
@@ -71,6 +72,7 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 
+androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
 compose-settings-storage-preferences = { module = "com.github.alorma:compose-settings-storage-preferences", version.ref = "composeSettingsUiM3" }
 compose-settings-ui-m3 = { module = "com.github.alorma:compose-settings-ui-m3", version.ref = "composeSettingsUiM3" }
 
