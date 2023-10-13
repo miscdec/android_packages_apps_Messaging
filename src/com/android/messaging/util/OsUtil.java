@@ -22,6 +22,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.UserHandle;
 import android.os.UserManager;
+
 import androidx.core.os.BuildCompat;
 
 import com.android.messaging.Factory;
@@ -34,15 +35,15 @@ import java.util.Set;
  * Android OS version utilities
  */
 public class OsUtil {
-    private static boolean sIsAtLeastICS_MR1;
-    private static boolean sIsAtLeastJB;
-    private static boolean sIsAtLeastJB_MR1;
-    private static boolean sIsAtLeastJB_MR2;
-    private static boolean sIsAtLeastKLP;
-    private static boolean sIsAtLeastL;
-    private static boolean sIsAtLeastL_MR1;
-    private static boolean sIsAtLeastM;
-    private static boolean sIsAtLeastN;
+    private static final boolean sIsAtLeastICS_MR1;
+    private static final boolean sIsAtLeastJB;
+    private static final boolean sIsAtLeastJB_MR1;
+    private static final boolean sIsAtLeastJB_MR2;
+    private static final boolean sIsAtLeastKLP;
+    private static final boolean sIsAtLeastL;
+    private static final boolean sIsAtLeastL_MR1;
+    private static final boolean sIsAtLeastM;
+    private static final boolean sIsAtLeastN;
 
     private static Boolean sIsSecondaryUser = null;
 
@@ -182,7 +183,7 @@ public class OsUtil {
         return null;
     }
 
-    private static Hashtable<String, Integer> sPermissions = new Hashtable<String, Integer>();
+    private static final Hashtable<String, Integer> sPermissions = new Hashtable<String, Integer>();
 
     /**
      * Check if the app has the specified permission. If it does not, the app needs to use
@@ -234,7 +235,20 @@ public class OsUtil {
     public static boolean hasStoragePermission() {
         // Note that READ_EXTERNAL_STORAGE and WRITE_EXTERNAL_STORAGE are granted or denied
         // together.
-        return OsUtil.hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return OsUtil.hasPermissions(
+                    new String[]{
+                            Manifest.permission.READ_MEDIA_IMAGES,
+                            Manifest.permission.READ_MEDIA_VIDEO,
+                            Manifest.permission.READ_MEDIA_AUDIO
+                    }
+            );
+        } else {
+            return OsUtil.hasPermission(
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+            );
+        }
     }
 
     public static boolean hasRecordAudioPermission() {
@@ -260,7 +274,7 @@ public class OsUtil {
         return missingArray;
     }
 
-    private static String[] sRequiredPermissions = new String[] {
+    private static final String[] sRequiredPermissions = new String[] {
         // Required to read existing SMS threads
         Manifest.permission.READ_SMS,
         // Required for knowing the phone number, number of SIMs, etc.

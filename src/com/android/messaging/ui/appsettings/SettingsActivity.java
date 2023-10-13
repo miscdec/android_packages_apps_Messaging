@@ -19,6 +19,7 @@ package com.android.messaging.ui.appsettings;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 
 import androidx.core.app.NavUtils;
 import androidx.fragment.app.Fragment;
+import androidx.loader.app.LoaderManager;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
@@ -54,10 +56,10 @@ import java.util.List;
  * in this case).
  */
 public class SettingsActivity extends BugleActionBarActivity {
+    Fragment SettingsFragment = new SettingsFragment();
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // Directly open the detailed settings page as the top-level settings activity if this is
         // not a multi-SIM device.
@@ -66,7 +68,7 @@ public class SettingsActivity extends BugleActionBarActivity {
             finish();
         } else {
             getSupportFragmentManager().beginTransaction()
-                    .replace(android.R.id.content, new SettingsFragment())
+                    .replace(android.R.id.content, SettingsFragment)
                     .commit();
         }
     }
@@ -88,8 +90,6 @@ public class SettingsActivity extends BugleActionBarActivity {
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            mBinding.bind(DataModel.get().createSettingsData(getActivity(), this));
-            mBinding.getData().init(getLoaderManager(), mBinding);
         }
 
         @Override
@@ -107,6 +107,16 @@ public class SettingsActivity extends BugleActionBarActivity {
             super.onDestroy();
             mBinding.unbind();
         }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            if (mBinding.isBound()) mBinding.unbind();
+            mBinding.bind(DataModel.get().createSettingsData(requireActivity(), this));
+            mBinding.getData().init(LoaderManager.getInstance(this), mBinding);
+            Log.d("SettingAty", "onResume");
+        }
+
 
         @Override
         public void onSelfParticipantDataLoaded(SettingsData data) {

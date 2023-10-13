@@ -75,6 +75,15 @@
             android:label="@string/action_start_search"
             android:theme="@style/BugleTheme" />
 
+
+        <activity
+            android:name=".ui.appsettings.CaptchaKeywordsSettingsActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="false"
+            android:label="@string/captcha_keywords_title"
+            android:screenOrientation="user"
+            android:theme="@style/Theme.MaterialComponents.DayNight" />
+
         <!-- Displays a list of conversations -->
         <activity
             android:name=".ui.conversationlist.ConversationListActivity"
@@ -208,6 +217,7 @@
                 <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
             </intent-filter>
         </activity>
+
 
         <!-- Handles sharing intent -->
         <activity
@@ -499,6 +509,7 @@
             </intent-filter>
         </receiver>
 
+
         <!-- Widget that displays the conversation list -->
         <receiver android:name=".widget.BugleWidgetProvider"
                 android:exported="true"
@@ -539,6 +550,10 @@
         </activity>
 
         <service android:name="androidx.appcompat.mms.MmsService"/>
+
+        <receiver
+            android:name=".receiver.CaptchaCodeReceiver"
+            android:exported="false" />
     </application>
 
 </manifest>

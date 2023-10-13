@@ -34,16 +34,17 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationCompat.WearableExtender;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.app.RemoteInput;
-import androidx.collection.SimpleArrayMap;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.text.style.TextAppearanceSpan;
+
+import androidx.collection.SimpleArrayMap;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationCompat.WearableExtender;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.RemoteInput;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
@@ -54,7 +55,6 @@ import com.android.messaging.datamodel.MessageNotificationState.MultiMessageNoti
 import com.android.messaging.datamodel.action.MarkAsReadAction;
 import com.android.messaging.datamodel.action.MarkAsSeenAction;
 import com.android.messaging.datamodel.action.RedownloadMmsAction;
-import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.media.AvatarRequestDescriptor;
 import com.android.messaging.datamodel.media.ImageResource;
 import com.android.messaging.datamodel.media.MediaRequest;
@@ -62,6 +62,7 @@ import com.android.messaging.datamodel.media.MediaResourceManager;
 import com.android.messaging.datamodel.media.MessagePartVideoThumbnailRequestDescriptor;
 import com.android.messaging.datamodel.media.UriImageRequestDescriptor;
 import com.android.messaging.datamodel.media.VideoThumbnailRequest;
+import com.android.messaging.receiver.CaptchaCodeReceiver;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
@@ -71,6 +72,7 @@ import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
+import com.android.messaging.util.CaptchaUtil;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ConversationIdSet;
 import com.android.messaging.util.ImageUtils;
@@ -79,7 +81,6 @@ import com.android.messaging.util.NotificationPlayer;
 import com.android.messaging.util.NotificationsUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
-import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.ThreadUtil;
 import com.android.messaging.util.UriUtil;
 
@@ -95,7 +96,7 @@ import java.util.Set;
  * There are currently two main classes of notification and their rules: <p>
  * 1) Messages - {@link MessageNotificationState}. Only one message notification.
  * Unread messages across senders and conversations are coalesced.<p>
- * 2) Failed Messages - {@link MessageNotificationState#checkFailedMesages } Only one failed
+ * 2) Failed Messages - {@link MessageNotificationState#checkFailedMessages()}  } Only one failed
  * message. Multiple failures are coalesced.<p>
  *
  * To add a new class of notifications, subclass the NotificationState and add commands which
@@ -638,9 +639,7 @@ public class BugleNotifications {
         }
 
         synchronized (sPendingNotifications) {
-            if (sPendingNotifications.contains(notificationState)) {
-                sPendingNotifications.remove(notificationState);
-            }
+            sPendingNotifications.remove(notificationState);
         }
 
         notificationState.mNotificationBuilder
@@ -787,8 +786,17 @@ public class BugleNotifications {
 
             maybeAddWearableConversationLog(wearableExtender,
                     (MultiMessageNotificationState) notificationState);
+            final MultiMessageNotificationState multiMessageNotificationState =
+                    (MultiMessageNotificationState) notificationState;
+            final ConversationLineInfo convInfo = multiMessageNotificationState.mConvList.mConvInfos.get(0);
+            String content = multiMessageNotificationState.mContent.toString();
+            String captcha = CaptchaUtil.getCaptcha(context, content);
             addDownloadMmsAction(notifBuilder, wearableExtender, notificationState);
+            if (!TextUtils.isEmpty(captcha)) {
+                addCopyCaptchaAction(notifBuilder, wearableExtender, notificationState, captcha);
+            } else {
             addWearableVoiceReplyAction(notifBuilder, wearableExtender, notificationState);
+            }
         }
 
         // Apply the wearable options and build & post the notification
@@ -874,6 +882,20 @@ public class BugleNotifications {
         remoteInputBuilder.setChoices(choices);
         wearActionBuilder.addRemoteInput(remoteInputBuilder.build());
         wearableExtender.addAction(wearActionBuilder.build());
+    }
+
+    private static void addCopyCaptchaAction(final NotificationCompat.Builder notifBuilder,
+                                             final WearableExtender wearableExtender, final NotificationState notificationState, final String captcha) {
+        final Context context = Factory.get().getApplicationContext();
+        final Intent pendingIntent = new Intent();
+        pendingIntent.setClass(context, CaptchaCodeReceiver.class);
+        pendingIntent.putExtra("chapataCode", captcha);
+        pendingIntent.putExtra("conversationId", notificationState.mConversationIds.first());
+        PendingIntent captchaIntent = PendingIntent.getBroadcast(context, 0, pendingIntent, PendingIntent.FLAG_MUTABLE);
+        final NotificationCompat.Action.Builder readActionBuilder =
+                new NotificationCompat.Action.Builder(0, String.format(context.getString(R.string.captcha_copy_action), captcha), captchaIntent);
+        notifBuilder.addAction(readActionBuilder.build());
+        wearableExtender.addAction(readActionBuilder.build());
     }
 
     private static void addDownloadMmsAction(final NotificationCompat.Builder notifBuilder,
