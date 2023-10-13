@@ -24,11 +24,12 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import androidx.annotation.Nullable;
 import android.support.rastermill.FrameSequenceDrawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.widget.ImageView;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.binding.Binding;
@@ -52,7 +53,7 @@ import java.util.HashSet;
 /**
  * An ImageView used to asynchronously request an image from MediaResourceManager and render it.
  */
-public class AsyncImageView extends ImageView implements MediaResourceLoadListener<ImageResource> {
+public class AsyncImageView extends AppCompatImageView implements MediaResourceLoadListener<ImageResource> {
     private static final String TAG = LogUtil.BUGLE_DATAMODEL_TAG;
     // 100ms delay before disposing the image in case the AsyncImageView is re-added to the UI
     private static final int DISPOSE_IMAGE_DELAY = 100;
@@ -67,7 +68,7 @@ public class AsyncImageView extends ImageView implements MediaResourceLoadListen
     public final Binding<BindableMediaRequest<ImageResource>> mImageRequestBinding;
 
     /** True if we want the image to fade in when it loads */
-    private boolean mFadeIn;
+    private final boolean mFadeIn;
 
     /** True if we want the image to reveal (scale) when it loads. When set to true, this
      * will take precedence over {@link #mFadeIn} */
