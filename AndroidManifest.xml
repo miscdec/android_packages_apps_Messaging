@@ -75,6 +75,11 @@
             android:label="@string/action_start_search"
             android:theme="@style/BugleTheme" />
 
+        <activity
+            android:name="com.android.messaging2.ui.screen.license.LicenseActivity"
+            android:exported="false"
+            android:label="@string/title_activity_license"
+            android:theme="@style/BugleTheme" />
 
         <activity
             android:name=".ui.appsettings.CaptchaKeywordsSettingsActivity"
