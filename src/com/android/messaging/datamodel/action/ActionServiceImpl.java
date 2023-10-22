@@ -145,6 +145,23 @@ public class ActionServiceImpl extends JobIntentService {
     }
 
     /**
+     * Creates a pending intent that will trigger a data model action when the intent is
+     * triggered
+     */
+    public static PendingIntent makeStartActionPendingIntent(final Context context,
+            final Action action, final int requestCode, final boolean launchesAnActivity) {
+        final Intent intent = PendingActionReceiver.makeIntent(OP_START_ACTION);
+        final Bundle actionBundle = new Bundle();
+        actionBundle.putParcelable(BUNDLE_ACTION, action);
+        intent.putExtra(EXTRA_ACTION_BUNDLE, actionBundle);
+        if (launchesAnActivity) {
+            intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
+        }
+        return PendingIntent.getBroadcast(context, requestCode, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+    }
+
+    /**
      * Broadcast receiver for alarms scheduled through ActionService.
      */
     public static class PendingActionReceiver extends BroadcastReceiver {
@@ -165,7 +182,7 @@ public class ActionServiceImpl extends JobIntentService {
                 final long delayMs) {
             final Context context = Factory.get().getApplicationContext();
             final PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                    context, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                    context, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_MUTABLE);
 
             final AlarmManager mgr =
                     (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -185,23 +202,6 @@ public class ActionServiceImpl extends JobIntentService {
         public void onReceive(final Context context, final Intent intent) {
             ActionServiceImpl.startServiceWithIntent(intent);
         }
-    }
-
-    /**
-     * Creates a pending intent that will trigger a data model action when the intent is
-     * triggered
-     */
-    public static PendingIntent makeStartActionPendingIntent(final Context context,
-            final Action action, final int requestCode, final boolean launchesAnActivity) {
-        final Intent intent = PendingActionReceiver.makeIntent(OP_START_ACTION);
-        final Bundle actionBundle = new Bundle();
-        actionBundle.putParcelable(BUNDLE_ACTION, action);
-        intent.putExtra(EXTRA_ACTION_BUNDLE, actionBundle);
-        if (launchesAnActivity) {
-            intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
-        }
-        return PendingIntent.getBroadcast(context, requestCode, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     /**
@@ -249,20 +249,20 @@ public class ActionServiceImpl extends JobIntentService {
         actionBundle.setClassLoader(getClassLoader());
         switch(opcode) {
             case OP_START_ACTION: {
-                action = (Action) actionBundle.getParcelable(BUNDLE_ACTION);
+                action = actionBundle.getParcelable(BUNDLE_ACTION);
                 executeAction(action);
                 break;
             }
 
             case OP_RECEIVE_BACKGROUND_RESPONSE: {
-                action = (Action) actionBundle.getParcelable(BUNDLE_ACTION);
+                action = actionBundle.getParcelable(BUNDLE_ACTION);
                 final Bundle response = intent.getBundleExtra(EXTRA_WORKER_RESPONSE);
                 processBackgroundResponse(action, response);
                 break;
             }
 
             case OP_RECEIVE_BACKGROUND_FAILURE: {
-                action = (Action) actionBundle.getParcelable(BUNDLE_ACTION);
+                action = actionBundle.getParcelable(BUNDLE_ACTION);
                 processBackgroundFailure(action);
                 break;
             }

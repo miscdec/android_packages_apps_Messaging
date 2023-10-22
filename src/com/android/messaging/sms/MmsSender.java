@@ -22,8 +22,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.appcompat.mms.MmsManager;
 import android.telephony.SmsManager;
+
+import androidx.appcompat.mms.MmsManager;
 
 import com.android.messaging.datamodel.MmsFileProvider;
 import com.android.messaging.datamodel.action.SendMessageAction;
@@ -163,7 +164,7 @@ public class MmsSender {
                 context,
                 0 /*request code*/,
                 sentIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
         // Send the message
         MmsManager.sendMultimediaMessage(subId, context, contentUri, locationUrl,
@@ -262,7 +263,7 @@ public class MmsSender {
                 context,
                 0 /*request code*/,
                 downloadedIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 
         MmsManager.downloadMultimediaMessage(subId, context, contentLocation, contentUri,
                 downloadedPendingIntent);

@@ -22,11 +22,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.telephony.CarrierConfigManager;
+
 import androidx.appcompat.mms.CarrierConfigValuesLoader;
 import androidx.appcompat.mms.MmsManager;
-import android.telephony.CarrierConfigManager;
 
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.receiver.SmsReceiver;
@@ -126,17 +128,29 @@ public class BugleApplication extends Application implements UncaughtExceptionHa
     }
 
     private static void registerCarrierConfigChangeReceiver(final Context context) {
-        context.registerReceiver(new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                LogUtil.i(TAG, "Carrier config changed. Reloading MMS config.");
-                MmsConfig.loadAsync();
-            }
-        }, new IntentFilter(CarrierConfigManager.ACTION_CARRIER_CONFIG_CHANGED));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.registerReceiver(new BroadcastReceiver() {
+                                         @Override
+                                         public void onReceive(Context context, Intent intent) {
+                                             LogUtil.i(TAG, "Carrier config changed. Reloading MMS config.");
+                                             MmsConfig.loadAsync();
+                                         }
+                                     }, new IntentFilter(CarrierConfigManager.ACTION_CARRIER_CONFIG_CHANGED),
+                    Context.RECEIVER_EXPORTED/*UNAUDITED*/
+            );
+        } else {
+            context.registerReceiver(new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    LogUtil.i(TAG, "Carrier config changed. Reloading MMS config.");
+                    MmsConfig.loadAsync();
+                }
+            }, new IntentFilter(CarrierConfigManager.ACTION_CARRIER_CONFIG_CHANGED));
+        }
     }
 
     private static void initMmsLib(final Context context, final BugleGservices bugleGservices,
-            final CarrierConfigValuesLoader carrierConfigValuesLoader) {
+                                   final CarrierConfigValuesLoader carrierConfigValuesLoader) {
         MmsManager.setApnSettingsLoader(new BugleApnSettingsLoader(context));
         MmsManager.setCarrierConfigValuesLoader(carrierConfigValuesLoader);
         MmsManager.setUserAgentInfoLoader(new BugleUserAgentInfoLoader(context));
@@ -212,14 +226,14 @@ public class BugleApplication extends Application implements UncaughtExceptionHa
             if (file != null) {
                 android.os.Debug.startMethodTracing(file.getAbsolutePath(), 160 * 1024 * 1024);
                 new Handler(Looper.getMainLooper()).postDelayed(
-                       new Runnable() {
+                        new Runnable() {
                             @Override
                             public void run() {
                                 android.os.Debug.stopMethodTracing();
                                 // Allow world to see trace file
                                 DebugUtils.ensureReadable(file);
                                 LogUtil.d(LogUtil.PROFILE_TAG, "Tracing complete - "
-                                     + file.getAbsolutePath());
+                                        + file.getAbsolutePath());
                             }
                         }, 30000);
             }

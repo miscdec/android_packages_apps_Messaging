@@ -59,78 +59,58 @@ public class SmsSender {
     /*
      * A map for pending sms messages. The key is the random request UUID.
      */
-    private static ConcurrentHashMap<Uri, SendResult> sPendingMessageMap =
+    private static final ConcurrentHashMap<Uri, SendResult> sPendingMessageMap =
             new ConcurrentHashMap<Uri, SendResult>();
 
     private static final Random RANDOM = new Random();
 
-    /**
-     * Class that holds the sent status for all parts of a multipart message sending
-     */
-    public static class SendResult {
-        // Failure levels, used by the caller of the sender.
-        // For temporary failures, possibly we could retry the sending
-        // For permanent failures, we probably won't retry
-        public static final int FAILURE_LEVEL_NONE = 0;
-        public static final int FAILURE_LEVEL_TEMPORARY = 1;
-        public static final int FAILURE_LEVEL_PERMANENT = 2;
-
-        // Tracking the remaining pending parts in sending
-        private int mPendingParts;
-        // Tracking the highest level of failure among all parts
-        private int mHighestFailureLevel;
-
-        public SendResult(final int numOfParts) {
-            Assert.isTrue(numOfParts > 0);
-            mPendingParts = numOfParts;
-            mHighestFailureLevel = FAILURE_LEVEL_NONE;
+    // Actually sending the message using SmsManager
+    private static void sendInternal(final Context context, final int subId, String dest,
+            final ArrayList<String> messages, final String serviceCenter,
+            final boolean requireDeliveryReport, final Uri messageUri) throws SmsException {
+        Assert.notNull(context);
+        final SmsManager smsManager = PhoneUtils.get(subId).getSmsManager();
+        final int messageCount = messages.size();
+        final ArrayList<PendingIntent> deliveryIntents = new ArrayList<PendingIntent>(messageCount);
+        final ArrayList<PendingIntent> sentIntents = new ArrayList<PendingIntent>(messageCount);
+        for (int i = 0; i < messageCount; i++) {
+            // Make pending intents different for each message part
+            final int partId = (messageCount <= 1 ? 0 : i + 1);
+            if (requireDeliveryReport && (i == (messageCount - 1))) {
+                // TODO we only care about the delivery status of the last part
+                // Shall we have better tracking of delivery status of all parts?
+                deliveryIntents.add(PendingIntent.getBroadcast(
+                        context,
+                        partId,
+                        getSendStatusIntent(context, SendStatusReceiver.MESSAGE_DELIVERED_ACTION,
+                                messageUri, partId, subId),
+                        PendingIntent.FLAG_IMMUTABLE/*flag*/));
+            } else {
+                deliveryIntents.add(null);
+            }
+            sentIntents.add(PendingIntent.getBroadcast(
+                    context,
+                    partId,
+                    getSendStatusIntent(context, SendStatusReceiver.MESSAGE_SENT_ACTION,
+                            messageUri, partId, subId),
+                    PendingIntent.FLAG_IMMUTABLE/*flag*/));
         }
-
-        // Update the sent status of one part
-        public void setPartResult(final int resultCode) {
-            mPendingParts--;
-            setHighestFailureLevel(resultCode);
-        }
-
-        public boolean hasPending() {
-            return mPendingParts > 0;
-        }
-
-        public int getHighestFailureLevel() {
-            return mHighestFailureLevel;
-        }
-
-        private int getFailureLevel(final int resultCode) {
-            switch (resultCode) {
-                case Activity.RESULT_OK:
-                    return FAILURE_LEVEL_NONE;
-                case SmsManager.RESULT_ERROR_NO_SERVICE:
-                    return FAILURE_LEVEL_TEMPORARY;
-                case SmsManager.RESULT_ERROR_RADIO_OFF:
-                    return FAILURE_LEVEL_PERMANENT;
-                case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                    return FAILURE_LEVEL_PERMANENT;
-                default: {
-                    LogUtil.e(TAG, "SmsSender: Unexpected sent intent resultCode = " + resultCode);
-                    return FAILURE_LEVEL_PERMANENT;
+        try {
+            if (MmsConfig.get(subId).getSendMultipartSmsAsSeparateMessages()) {
+                // If multipart sms is not supported, send them as separate messages
+                for (int i = 0; i < messageCount; i++) {
+                    smsManager.sendTextMessage(dest,
+                            serviceCenter,
+                            messages.get(i),
+                            sentIntents.get(i),
+                            deliveryIntents.get(i));
                 }
+            } else {
+                smsManager.sendMultipartTextMessage(
+                        dest, serviceCenter, messages, sentIntents, deliveryIntents);
             }
-        }
-
-        private void setHighestFailureLevel(final int resultCode) {
-            final int level = getFailureLevel(resultCode);
-            if (level > mHighestFailureLevel) {
-                mHighestFailureLevel = level;
-            }
-        }
-
-        @Override
-        public String toString() {
-            final StringBuilder sb = new StringBuilder();
-            sb.append("SendResult:");
-            sb.append("Pending=").append(mPendingParts).append(",");
-            sb.append("HighestFailureLevel=").append(mHighestFailureLevel);
-            return sb.toString();
+        } catch (final Exception e) {
+            throw new SmsException("SmsSender: caught exception in sending " + e);
         }
     }
 
@@ -247,53 +227,73 @@ public class SmsSender {
         return pendingResult;
     }
 
-    // Actually sending the message using SmsManager
-    private static void sendInternal(final Context context, final int subId, String dest,
-            final ArrayList<String> messages, final String serviceCenter,
-            final boolean requireDeliveryReport, final Uri messageUri) throws SmsException {
-        Assert.notNull(context);
-        final SmsManager smsManager = PhoneUtils.get(subId).getSmsManager();
-        final int messageCount = messages.size();
-        final ArrayList<PendingIntent> deliveryIntents = new ArrayList<PendingIntent>(messageCount);
-        final ArrayList<PendingIntent> sentIntents = new ArrayList<PendingIntent>(messageCount);
-        for (int i = 0; i < messageCount; i++) {
-            // Make pending intents different for each message part
-            final int partId = (messageCount <= 1 ? 0 : i + 1);
-            if (requireDeliveryReport && (i == (messageCount - 1))) {
-                // TODO we only care about the delivery status of the last part
-                // Shall we have better tracking of delivery status of all parts?
-                deliveryIntents.add(PendingIntent.getBroadcast(
-                        context,
-                        partId,
-                        getSendStatusIntent(context, SendStatusReceiver.MESSAGE_DELIVERED_ACTION,
-                                messageUri, partId, subId),
-                        0/*flag*/));
-            } else {
-                deliveryIntents.add(null);
-            }
-            sentIntents.add(PendingIntent.getBroadcast(
-                    context,
-                    partId,
-                    getSendStatusIntent(context, SendStatusReceiver.MESSAGE_SENT_ACTION,
-                            messageUri, partId, subId),
-                    0/*flag*/));
+    /**
+     * Class that holds the sent status for all parts of a multipart message sending
+     */
+    public static class SendResult {
+        // Failure levels, used by the caller of the sender.
+        // For temporary failures, possibly we could retry the sending
+        // For permanent failures, we probably won't retry
+        public static final int FAILURE_LEVEL_NONE = 0;
+        public static final int FAILURE_LEVEL_TEMPORARY = 1;
+        public static final int FAILURE_LEVEL_PERMANENT = 2;
+
+        // Tracking the remaining pending parts in sending
+        private int mPendingParts;
+        // Tracking the highest level of failure among all parts
+        private int mHighestFailureLevel;
+
+        public SendResult(final int numOfParts) {
+            Assert.isTrue(numOfParts > 0);
+            mPendingParts = numOfParts;
+            mHighestFailureLevel = FAILURE_LEVEL_NONE;
         }
-        try {
-            if (MmsConfig.get(subId).getSendMultipartSmsAsSeparateMessages()) {
-                // If multipart sms is not supported, send them as separate messages
-                for (int i = 0; i < messageCount; i++) {
-                    smsManager.sendTextMessage(dest,
-                            serviceCenter,
-                            messages.get(i),
-                            sentIntents.get(i),
-                            deliveryIntents.get(i));
+
+        // Update the sent status of one part
+        public void setPartResult(final int resultCode) {
+            mPendingParts--;
+            setHighestFailureLevel(resultCode);
+        }
+
+        public boolean hasPending() {
+            return mPendingParts > 0;
+        }
+
+        public int getHighestFailureLevel() {
+            return mHighestFailureLevel;
+        }
+
+        private int getFailureLevel(final int resultCode) {
+            switch (resultCode) {
+                case Activity.RESULT_OK:
+                    return FAILURE_LEVEL_NONE;
+                case SmsManager.RESULT_ERROR_NO_SERVICE:
+                    return FAILURE_LEVEL_TEMPORARY;
+                case SmsManager.RESULT_ERROR_RADIO_OFF:
+                    return FAILURE_LEVEL_PERMANENT;
+                case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                    return FAILURE_LEVEL_PERMANENT;
+                default: {
+                    LogUtil.e(TAG, "SmsSender: Unexpected sent intent resultCode = " + resultCode);
+                    return FAILURE_LEVEL_PERMANENT;
                 }
-            } else {
-                smsManager.sendMultipartTextMessage(
-                        dest, serviceCenter, messages, sentIntents, deliveryIntents);
             }
-        } catch (final Exception e) {
-            throw new SmsException("SmsSender: caught exception in sending " + e);
+        }
+
+        private void setHighestFailureLevel(final int resultCode) {
+            final int level = getFailureLevel(resultCode);
+            if (level > mHighestFailureLevel) {
+                mHighestFailureLevel = level;
+            }
+        }
+
+
+        @Override
+        public String toString() {
+            String sb = "SendResult:" +
+                    "Pending=" + mPendingParts + "," +
+                    "HighestFailureLevel=" + mHighestFailureLevel;
+            return sb;
         }
     }
 

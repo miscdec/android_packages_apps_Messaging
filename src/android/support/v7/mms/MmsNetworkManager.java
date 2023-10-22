@@ -159,7 +159,6 @@ class MmsNetworkManager {
                 } while (waitMs > 0);
                 // Last check
                 if (extendMmsConnectivityLocked()) {
-                    return;
                 } else {
                     // Reaching here means timed out.
                     throw new MmsNetworkException("Acquiring MMS network timed out");
@@ -324,7 +323,12 @@ class MmsNetworkManager {
 
     private void registerConnectivityChangeReceiverLocked() {
         if (!mReceiverRegistered) {
-            mContext.registerReceiver(mConnectivityChangeReceiver, mConnectivityIntentFilter);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                mContext.registerReceiver(mConnectivityChangeReceiver, mConnectivityIntentFilter,
+                        Context.RECEIVER_EXPORTED/*UNAUDITED*/);
+            } else {
+                mContext.registerReceiver(mConnectivityChangeReceiver, mConnectivityIntentFilter);
+            }
             mReceiverRegistered = true;
         }
     }

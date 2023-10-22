@@ -433,22 +433,6 @@ public class UIIntentsImpl extends UIIntents {
         return getPendingIntentWithParentStack(context, intent, requestCode);
     }
 
-    @Override
-    public PendingIntent getPendingIntentForClearingNotifications(final Context context,
-            final int updateTargets, final ConversationIdSet conversationIdSet,
-            final int requestCode) {
-        final Intent intent = new Intent(context, NotificationReceiver.class);
-        intent.setAction(ACTION_RESET_NOTIFICATIONS);
-        intent.putExtra(UI_INTENT_EXTRA_NOTIFICATIONS_UPDATE, updateTargets);
-        if (conversationIdSet != null) {
-            intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID_SET,
-                    conversationIdSet.getDelimitedString());
-        }
-        return PendingIntent.getBroadcast(context,
-                requestCode, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
     /**
      * Gets a PendingIntent associated with an Intent to start an Activity. All notifications
      * that starts an Activity must use this method to get a PendingIntent, which achieves two
@@ -464,8 +448,24 @@ public class UIIntentsImpl extends UIIntents {
         // Adds the back stack for the Intent (plus the Intent itself)
         stackBuilder.addNextIntentWithParentStack(intent);
         final PendingIntent resultPendingIntent =
-            stackBuilder.getPendingIntent(requestCode, PendingIntent.FLAG_UPDATE_CURRENT);
+                stackBuilder.getPendingIntent(requestCode, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
         return resultPendingIntent;
+    }
+
+    @Override
+    public PendingIntent getPendingIntentForClearingNotifications(final Context context,
+            final int updateTargets, final ConversationIdSet conversationIdSet,
+            final int requestCode) {
+        final Intent intent = new Intent(context, NotificationReceiver.class);
+        intent.setAction(ACTION_RESET_NOTIFICATIONS);
+        intent.putExtra(UI_INTENT_EXTRA_NOTIFICATIONS_UPDATE, updateTargets);
+        if (conversationIdSet != null) {
+            intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID_SET,
+                    conversationIdSet.getDelimitedString());
+        }
+        return PendingIntent.getBroadcast(context,
+                requestCode, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
     }
 
     @Override
@@ -477,7 +477,7 @@ public class UIIntentsImpl extends UIIntents {
                 getSmsStorageLowWarningActivityIntent(context));
 
         return taskStackBuilder.getPendingIntent(
-                0, PendingIntent.FLAG_UPDATE_CURRENT);
+                0, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
     }
 
     @Override
