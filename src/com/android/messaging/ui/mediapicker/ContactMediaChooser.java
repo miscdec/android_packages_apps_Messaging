@@ -16,7 +16,6 @@
 
 package com.android.messaging.ui.mediapicker;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,6 +31,7 @@ import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.ContactUtil;
 import com.android.messaging.util.ContentType;
+import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.SafeAsyncTask;
 
 /**
@@ -93,14 +93,14 @@ class ContactMediaChooser extends MediaChooser {
         super.setSelected(selected);
         if (selected && !ContactUtil.hasReadContactsPermission()) {
             mMediaPicker.requestPermissions(
-                    new String[] {Manifest.permission.READ_CONTACTS},
+                    OsUtil.readContactsPermission,
                     MediaPicker.READ_CONTACT_PERMISSION_REQUEST_CODE);
         }
     }
 
     @Override
     protected void onRequestPermissionsResult(
-            final int requestCode, final String permissions[], final int[] grantResults) {
+            final int requestCode, final String[] permissions, final int[] grantResults) {
         if (requestCode == MediaPicker.READ_CONTACT_PERMISSION_REQUEST_CODE) {
             final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
             mEnabledView.setVisibility(permissionGranted ? View.VISIBLE : View.GONE);

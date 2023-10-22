@@ -16,7 +16,6 @@
 
 package com.android.messaging.ui.mediapicker;
 
-import android.Manifest;
 import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,13 +113,13 @@ class AudioMediaChooser extends MediaChooser implements
     }
 
     private void requestRecordAudioPermission() {
-        mMediaPicker.requestPermissions(new String[] { Manifest.permission.RECORD_AUDIO },
+        mMediaPicker.requestPermissions(OsUtil.recordAudioPermission,
                 MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE);
     }
 
     @Override
     protected void onRequestPermissionsResult(
-            final int requestCode, final String permissions[], final int[] grantResults) {
+            final int requestCode, final String[] permissions, final int[] grantResults) {
         if (requestCode == MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE) {
             final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
             // onRequestPermissionsResult can sometimes get called before createView().

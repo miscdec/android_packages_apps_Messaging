@@ -60,9 +60,21 @@ public class OsUtil {
         sIsAtLeastN = BuildCompat.isAtLeastN();
     }
 
+    private static final String[] sRequiredPermissions = new String[]{
+            // Required to read existing SMS threads
+            Manifest.permission.READ_SMS,
+            // Required for knowing the phone number, number of SIMs, etc.
+            Manifest.permission.READ_PHONE_STATE,
+            // This is not strictly required, but simplifies the contact picker scenarios
+            Manifest.permission.READ_CONTACTS,
+    };
+    public static String[] recordAudioPermission = new String[]{Manifest.permission.RECORD_AUDIO};
+    public static String[] cameraPermission = new String[]{Manifest.permission.CAMERA};
+    public static String[] readContactsPermission = new String[]{Manifest.permission.READ_CONTACTS};
+
     /**
      * @return True if the version of Android that we're running on is at least Ice Cream Sandwich
-     *  MR1 (API level 15).
+     * MR1 (API level 15).
      */
     public static boolean isAtLeastICS_MR1() {
         return sIsAtLeastICS_MR1;
@@ -70,7 +82,7 @@ public class OsUtil {
 
     /**
      * @return True if the version of Android that we're running on is at least Jelly Bean
-     *  (API level 16).
+     * (API level 16).
      */
     public static boolean isAtLeastJB() {
         return sIsAtLeastJB;
@@ -78,7 +90,7 @@ public class OsUtil {
 
     /**
      * @return True if the version of Android that we're running on is at least Jelly Bean MR1
-     *  (API level 17).
+     * (API level 17).
      */
     public static boolean isAtLeastJB_MR1() {
         return sIsAtLeastJB_MR1;
@@ -86,7 +98,7 @@ public class OsUtil {
 
     /**
      * @return True if the version of Android that we're running on is at least Jelly Bean MR2
-     *  (API level 18).
+     * (API level 18).
      */
     public static boolean isAtLeastJB_MR2() {
         return sIsAtLeastJB_MR2;
@@ -94,42 +106,10 @@ public class OsUtil {
 
     /**
      * @return True if the version of Android that we're running on is at least KLP
-     *  (API level 19).
+     * (API level 19).
      */
     public static boolean isAtLeastKLP() {
         return sIsAtLeastKLP;
-    }
-
-    /**
-     * @return True if the version of Android that we're running on is at least L
-     *  (API level 21).
-     */
-    public static boolean isAtLeastL() {
-        return sIsAtLeastL;
-    }
-
-    /**
-     * @return True if the version of Android that we're running on is at least L MR1
-     *  (API level 22).
-     */
-    public static boolean isAtLeastL_MR1() {
-        return sIsAtLeastL_MR1;
-    }
-
-    /**
-     * @return True if the version of Android that we're running on is at least M
-     *  (API level 23).
-     */
-    public static boolean isAtLeastM() {
-        return sIsAtLeastM;
-    }
-
-    /**
-     * @return True if the version of Android that we're running on is at least N
-     *  (API level 24).
-     */
-    public static boolean isAtLeastN() {
-        return sIsAtLeastN;
     }
 
     /**
@@ -160,7 +140,54 @@ public class OsUtil {
     }
 
     /**
+     * @return True if the version of Android that we're running on is at least L
+     * (API level 21).
+     */
+    public static boolean isAtLeastL() {
+        return sIsAtLeastL;
+    }
+
+    private static final Hashtable<String, Integer> sPermissions = new Hashtable<String, Integer>();
+
+    /**
+     * @return True if the version of Android that we're running on is at least L MR1
+     * (API level 22).
+     */
+    public static boolean isAtLeastL_MR1() {
+        return sIsAtLeastL_MR1;
+    }
+
+    /**
+     * @return True if the version of Android that we're running on is at least M
+     * (API level 23).
+     */
+    public static boolean isAtLeastM() {
+        return sIsAtLeastM;
+    }
+
+    public static boolean hasPhonePermission() {
+        return hasPermission(Manifest.permission.READ_PHONE_STATE);
+    }
+
+    public static boolean hasSmsPermission() {
+        return hasPermission(Manifest.permission.READ_SMS);
+    }
+
+    public static boolean hasLocationPermission() {
+        return OsUtil.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+    }
+
+    /**
+     * @return True if the version of Android that we're running on is at least N
+     * (API level 24).
+     */
+    public static boolean isAtLeastN() {
+        return sIsAtLeastN;
+    }
+
+    /**
      * Creates a joined string from a Set<String> using the given delimiter.
+     *
      * @param values
      * @param delimiter
      * @return
@@ -183,13 +210,12 @@ public class OsUtil {
         return null;
     }
 
-    private static final Hashtable<String, Integer> sPermissions = new Hashtable<String, Integer>();
-
     /**
      * Check if the app has the specified permission. If it does not, the app needs to use
-     * {@link android.app.Activity#requestPermission}. Note that if it
+     * {@link android.app.Activity#requestPermissions(String[], int)}. Note that if it
      * returns true, it cannot return false in the same process as the OS kills the process when
      * any permission is revoked.
+     *
      * @param permission A permission from {@link android.Manifest.permission}
      */
     public static boolean hasPermission(final String permission) {
@@ -209,7 +235,9 @@ public class OsUtil {
         }
     }
 
-    /** Does the app have all the specified permissions */
+    /**
+     * Does the app have all the specified permissions
+     */
     public static boolean hasPermissions(final String[] permissions) {
         for (final String permission : permissions) {
             if (!hasPermission(permission)) {
@@ -219,40 +247,15 @@ public class OsUtil {
         return true;
     }
 
-    public static boolean hasPhonePermission() {
-        return hasPermission(Manifest.permission.READ_PHONE_STATE);
-    }
-
-    public static boolean hasSmsPermission() {
-        return hasPermission(Manifest.permission.READ_SMS);
-    }
-
-    public static boolean hasLocationPermission() {
-        return OsUtil.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-    }
-
-
     public static boolean hasStoragePermission() {
         // Note that READ_EXTERNAL_STORAGE and WRITE_EXTERNAL_STORAGE are granted or denied
         // together.
+        return OsUtil.hasPermissions(mediaStoragePermissions());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return OsUtil.hasPermissions(
-                    new String[]{
-                            Manifest.permission.READ_MEDIA_IMAGES,
-                            Manifest.permission.READ_MEDIA_VIDEO,
-                            Manifest.permission.READ_MEDIA_AUDIO
-                    }
-            );
-        } else {
-            return OsUtil.hasPermission(
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-            );
-        }
     }
 
     public static boolean hasRecordAudioPermission() {
-        return OsUtil.hasPermission(Manifest.permission.RECORD_AUDIO);
+        return OsUtil.hasPermissions(recordAudioPermission);
     }
 
     /**
@@ -274,16 +277,19 @@ public class OsUtil {
         return missingArray;
     }
 
-    private static final String[] sRequiredPermissions = new String[] {
-        // Required to read existing SMS threads
-        Manifest.permission.READ_SMS,
-        // Required for knowing the phone number, number of SIMs, etc.
-        Manifest.permission.READ_PHONE_STATE,
-        // This is not strictly required, but simplifies the contact picker scenarios
-        Manifest.permission.READ_CONTACTS,
-    };
+    public static String[] mediaStoragePermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return new String[]{
+                    Manifest.permission.READ_MEDIA_IMAGES,
+                    Manifest.permission.READ_MEDIA_VIDEO,
+                    Manifest.permission.READ_MEDIA_AUDIO
+            };
+        } else return new String[]{Manifest.permission.READ_EXTERNAL_STORAGE};
+    }
 
-    /** Does the app have the minimum set of permissions required to operate. */
+    /**
+     * Does the app have the minimum set of permissions required to operate.
+     */
     public static boolean hasRequiredPermissions() {
         return hasPermissions(sRequiredPermissions);
     }

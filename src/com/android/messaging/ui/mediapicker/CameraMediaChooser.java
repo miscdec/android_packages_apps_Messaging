@@ -16,7 +16,6 @@
 
 package com.android.messaging.ui.mediapicker;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
@@ -90,24 +89,20 @@ class CameraMediaChooser extends MediaChooser implements
                 R.layout.mediapicker_camera_chooser,
                 container /* root */,
                 false /* attachToRoot */);
-        mCameraPreviewHost = (CameraPreview.CameraPreviewHost) view.findViewById(
+        mCameraPreviewHost = view.findViewById(
                 R.id.camera_preview);
         mCameraPreviewHost.getView().setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(final View view, final MotionEvent motionEvent) {
-                if (CameraManager.get().isVideoMode()) {
-                    // Prevent the swipe down in video mode because video is always captured in
-                    // full screen
-                    return true;
-                }
-
-                return false;
+                // Prevent the swipe down in video mode because video is always captured in
+                // full screen
+                return CameraManager.get().isVideoMode();
             }
         });
 
         final View shutterVisual = view.findViewById(R.id.camera_shutter_visual);
 
-        mFullScreenButton = (ImageButton) view.findViewById(R.id.camera_fullScreen_button);
+        mFullScreenButton = view.findViewById(R.id.camera_fullScreen_button);
         mFullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -115,7 +110,7 @@ class CameraMediaChooser extends MediaChooser implements
             }
         });
 
-        mSwapCameraButton = (ImageButton) view.findViewById(R.id.camera_swapCamera_button);
+        mSwapCameraButton = view.findViewById(R.id.camera_swapCamera_button);
         mSwapCameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -123,7 +118,7 @@ class CameraMediaChooser extends MediaChooser implements
             }
         });
 
-        mCaptureButton = (ImageButton) view.findViewById(R.id.camera_capture_button);
+        mCaptureButton = view.findViewById(R.id.camera_capture_button);
         mCaptureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -185,7 +180,7 @@ class CameraMediaChooser extends MediaChooser implements
             }
         });
 
-        mSwapModeButton = (ImageButton) view.findViewById(R.id.camera_swap_mode_button);
+        mSwapModeButton = view.findViewById(R.id.camera_swap_mode_button);
         mSwapModeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -198,7 +193,7 @@ class CameraMediaChooser extends MediaChooser implements
             }
         });
 
-        mCancelVideoButton = (ImageButton) view.findViewById(R.id.camera_cancel_button);
+        mCancelVideoButton = view.findViewById(R.id.camera_cancel_button);
         mCancelVideoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -208,9 +203,9 @@ class CameraMediaChooser extends MediaChooser implements
             }
         });
 
-        mVideoCounter = (Chronometer) view.findViewById(R.id.camera_video_counter);
+        mVideoCounter = view.findViewById(R.id.camera_video_counter);
 
-        CameraManager.get().setRenderOverlay((RenderOverlay) view.findViewById(R.id.focus_visual));
+        CameraManager.get().setRenderOverlay(view.findViewById(R.id.focus_visual));
 
         mEnabledView = view.findViewById(R.id.mediapicker_enabled);
         mMissingPermissionView = view.findViewById(R.id.missing_permission_view);
@@ -269,12 +264,12 @@ class CameraMediaChooser extends MediaChooser implements
     }
 
     private void requestCameraPermission() {
-        mMediaPicker.requestPermissions(new String[] { Manifest.permission.CAMERA },
+        mMediaPicker.requestPermissions(OsUtil.cameraPermission,
                 MediaPicker.CAMERA_PERMISSION_REQUEST_CODE);
     }
 
     private void requestRecordAudioPermission() {
-        mMediaPicker.requestPermissions(new String[] { Manifest.permission.RECORD_AUDIO },
+        mMediaPicker.requestPermissions(OsUtil.recordAudioPermission,
                 MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE);
     }
 
@@ -282,13 +277,12 @@ class CameraMediaChooser extends MediaChooser implements
     protected void onRequestPermissionsResult(
             final int requestCode, final String[] permissions, final int[] grantResults) {
         if (requestCode == MediaPicker.CAMERA_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length != 0) {
-                final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+
+            final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                 updateForPermissionState(permissionGranted);
                 if (permissionGranted) {
                     mCameraPreviewHost.onCameraPermissionGranted();
                 }
-            }
 
 
         } else if (requestCode == MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE) {

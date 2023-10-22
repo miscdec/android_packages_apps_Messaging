@@ -16,14 +16,12 @@
 
 package com.android.messaging.ui.mediapicker;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.database.MergeCursor;
-import androidx.appcompat.app.ActionBar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,12 +29,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.GalleryGridItemData;
 import com.android.messaging.datamodel.data.MediaPickerData;
-import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.MediaPickerData.MediaPickerDataListener;
+import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.mediapicker.DocumentImagePicker.SelectionListener;
@@ -53,7 +54,7 @@ class GalleryMediaChooser extends MediaChooser implements
     private View mMissingPermissionView;
 
     /** Handles picking a media from the document picker. */
-    private DocumentImagePicker mDocumentImagePicker;
+    private final DocumentImagePicker mDocumentImagePicker;
 
     GalleryMediaChooser(final MediaPicker mediaPicker) {
         super(mediaPicker);
@@ -133,7 +134,7 @@ class GalleryMediaChooser extends MediaChooser implements
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        return (mView != null) ? mGalleryGridView.onOptionsItemSelected(item) : false;
+        return mView != null && mGalleryGridView.onOptionsItemSelected(item);
     }
 
     @Override
@@ -144,7 +145,7 @@ class GalleryMediaChooser extends MediaChooser implements
                 container /* root */,
                 false /* attachToRoot */);
 
-        mGalleryGridView = (GalleryGridView) view.findViewById(R.id.gallery_grid_view);
+        mGalleryGridView = view.findViewById(R.id.gallery_grid_view);
         mAdapter.setHostInterface(mGalleryGridView);
         mGalleryGridView.setAdapter(mAdapter);
         mGalleryGridView.setHostInterface(this);
@@ -216,7 +217,7 @@ class GalleryMediaChooser extends MediaChooser implements
         super.setSelected(selected);
         if (selected && !OsUtil.hasStoragePermission()) {
             mMediaPicker.requestPermissions(
-                    new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
+                    OsUtil.mediaStoragePermissions(),
                     MediaPicker.GALLERY_PERMISSION_REQUEST_CODE);
         }
     }
@@ -229,7 +230,7 @@ class GalleryMediaChooser extends MediaChooser implements
 
     @Override
     protected void onRequestPermissionsResult(
-            final int requestCode, final String permissions[], final int[] grantResults) {
+            final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults) {
         if (requestCode == MediaPicker.GALLERY_PERMISSION_REQUEST_CODE) {
             final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
             if (permissionGranted) {
