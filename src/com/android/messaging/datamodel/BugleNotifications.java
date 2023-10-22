@@ -889,7 +889,7 @@ public class BugleNotifications {
         final Context context = Factory.get().getApplicationContext();
         final Intent pendingIntent = new Intent();
         pendingIntent.setClass(context, CaptchaCodeReceiver.class);
-        pendingIntent.putExtra("chapataCode", captcha);
+        pendingIntent.putExtra("captchaCode", captcha);
         pendingIntent.putExtra("conversationId", notificationState.mConversationIds.first());
         PendingIntent captchaIntent = PendingIntent.getBroadcast(context, 0, pendingIntent, PendingIntent.FLAG_MUTABLE);
         final NotificationCompat.Action.Builder readActionBuilder =
