@@ -1,1 +1,0 @@
-/run/media/administrator/Data/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/src/main/cpp/CMakeLists.txt

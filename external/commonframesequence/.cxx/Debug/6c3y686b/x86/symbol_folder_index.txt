@@ -1,1 +1,0 @@
-/run/media/administrator/Data/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/build/intermediates/cxx/Debug/6c3y686b/obj/x86
