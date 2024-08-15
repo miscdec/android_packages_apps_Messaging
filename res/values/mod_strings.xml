@@ -24,7 +24,7 @@
     <string name="captcha_enable_title">Captcha detector</string>
     <string name="captcha_enable_summary">Check the verification code in the SMS and provide copy action in the notification</string>
 
-    <string name="captcha_keywords_title">Captcha keywords</string>
+    <string name="captcha_keywords_title">Captcha keywords(Ported from exTHmUI)</string>
     <string name="captcha_keywords_header">Long press the keyword to delete the keyword. If the keyword list is empty, it will be reset to the default keyword list.</string>
     <string name="add_captcha_keyword">Add keyword</string>
     <string name="captcha_dialog_tip">You can use line breaks to split keywords</string>

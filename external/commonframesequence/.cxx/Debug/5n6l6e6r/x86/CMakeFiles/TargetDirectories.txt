@@ -1,4 +1,0 @@
-D:/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/.cxx/Debug/5n6l6e6r/x86/CMakeFiles/framesequence.dir
-D:/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/.cxx/Debug/5n6l6e6r/x86/CMakeFiles/gif.dir
-D:/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/.cxx/Debug/5n6l6e6r/x86/CMakeFiles/edit_cache.dir
-D:/Projects/Private/AndroidStudioProjects/Messaging/commonframesequence/.cxx/Debug/5n6l6e6r/x86/CMakeFiles/rebuild_cache.dir

@@ -1,1 +1,0 @@
-D:\Projects\Private\AndroidStudioProjects\Messaging\commonframesequence\src\main\cpp\CMakeLists.txt
