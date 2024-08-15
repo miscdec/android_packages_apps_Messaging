@@ -4,66 +4,68 @@ targetSdk = "34"
 verCode = "10001190"
 verName = "1.1.19.0"
 
-com-android-application = "8.1.2"
-com-android-library = "8.1.2"
-kotlin = "1.9.10"
+agp = "8.5.1"
+kotlin = "2.0.0"
+ksp = "2.0.0-1.0.22"
 
-compose-bom = "2023.10.00"
-compose-compiler-version = "1.5.3"
+compose-bom = "+"
 
-core-ktx = "1.12.0"
+core-ktx = "1.13.1"
 palette = "1.0.0"
-exifinterface = "1.3.6"
-annotation = "1.7.0"
-media = "1.6.0"
+exifinterface = "1.3.7"
+annotation = "1.8.2"
+media = "1.7.0"
 multidex = "2.0.1"
 preference = "1.2.1"
-recyclerview = "1.3.1"
-appcompat = "1.6.1"
-material = "1.10.0"
+recyclerview = "1.3.2"
+appcompat = "1.7.0"
+material = "1.12.0"
 constraintlayout = "2.1.4"
-roomRuntime = "2.5.2"
-lifecycle-runtime-ktx = "2.6.2"
-fragmentKtx = "1.6.1"
+roomRuntime = "2.6.1"
+lifecycle-runtime-ktx = "2.8.4"
+fragmentKtx = "1.8.2"
 lifecycleExtensions = "2.2.0"
-
-activity-compose = "1.8.0"
-
-
-aboutlibrariesCompose = "10.9.1"
-composeSettingsUiM3 = "1.0.2"
+fragment = "1.8.2"
+material3Preference = "1.4"
+activity-compose = "1.9.1"
+accompanistThemeadapterAppcompat = "0.32.0"
+wcdb = "2.1.4"
+aboutlibrariesCompose = "11.2.2"
+composeSettingsUiM3 = "1.0.3"
 
 copperFlow = "1.0.0"
 
-carrier = "1.206"
-geocoder = "2.216"
-guava = "28.2-android"
-libphonenumber = "8.13.22"
+carrier = "1.214"
+geocoder = "2.227"
+guava = "32.1.3-android"
+libphonenumber = "8.13.33"
 
 junit = "4.13.2"
 androidx-test-ext-junit = "1.1.5"
 espresso-core = "3.5.1"
 
-navigation = "2.7.4"
-workRuntimeKtx = "2.8.1"
+navigation = "2.7.7"
+workRuntimeKtx = "2.9.1"
 
 
 [libraries]
 
-aboutlibraries-compose = { module = "com.mikepenz:aboutlibraries-compose", version.ref = "aboutlibrariesCompose" }
+aboutlibraries-compose = { module = "com.mikepenz:aboutlibraries-compose-m3", version.ref = "aboutlibrariesCompose" }
 aboutlibraries-core = { module = "com.mikepenz:aboutlibraries-core", version.ref = "aboutlibrariesCompose" }
 
+accompanist-themeadapter-appcompat = { module = "com.google.accompanist:accompanist-themeadapter-appcompat", version.ref = "accompanistThemeadapterAppcompat" }
+accompanist-themeadapter-material3 = { module = "com.google.accompanist:accompanist-themeadapter-material3", version.ref = "accompanistThemeadapterAppcompat" }
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
 androidx-exifinterface = { module = "androidx.exifinterface:exifinterface", version.ref = "exifinterface" }
 
+androidx-fragment = { module = "androidx.fragment:fragment", version.ref = "fragment" }
 androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
 androidx-lifecycle-extensions = { module = "androidx.lifecycle:lifecycle-extensions", version.ref = "lifecycleExtensions" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle-runtime-ktx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle-runtime-ktx" }
 androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle-runtime-ktx" }
 
-
-
+androidx-material = { module = "androidx.compose.material:material" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 
 androidx-preference = { module = "androidx.preference:preference", version.ref = "preference" }
@@ -73,6 +75,12 @@ androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRunt
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workRuntimeKtx" }
+
+wcdb-annotation = { module = "com.tencent.wcdb:annotation", version.ref = "wcdb" }
+wcdb-compat = { module = "com.tencent.wcdb:compat", version.ref = "wcdb" }
+wcdb-compiler = { module = "com.tencent.wcdb:compiler", version.ref = "wcdb" }
+wcdb-main = { module = "com.tencent.wcdb:main", version.ref = "wcdb" }
+
 compose-settings-storage-preferences = { module = "com.github.alorma:compose-settings-storage-preferences", version.ref = "composeSettingsUiM3" }
 compose-settings-ui-m3 = { module = "com.github.alorma:compose-settings-ui-m3", version.ref = "composeSettingsUiM3" }
 
@@ -80,6 +88,7 @@ copper-flow = { module = "app.cash.copper:copper-flow", version.ref = "copperFlo
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin"}
@@ -92,6 +101,7 @@ carrier = { module = "com.googlecode.libphonenumber:carrier", version.ref = "car
 geocoder = { module = "com.googlecode.libphonenumber:geocoder", version.ref = "geocoder" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
 libphonenumber = { module = "com.googlecode.libphonenumber:libphonenumber", version.ref = "libphonenumber" }
+material3-preference = { module = "com.github.knightwood:material3-preference", version.ref = "material3Preference" }
 prefixmapper = { module = "com.googlecode.libphonenumber:prefixmapper", version.ref = "geocoder" }
 
 
@@ -113,9 +123,10 @@ ui-viewbinding = { module = "androidx.compose.ui:ui-viewbinding"}
 ui-material-icons-extended = { module = "androidx.compose.material:material-icons-extended" }
 ui-material-icons-extended-android = { module = "androidx.compose.material:material-icons-extended-android" }
 [plugins]
-com-android-application = { id = "com.android.application", version.ref = "com-android-application" }
+com-android-application = { id = "com.android.application", version.ref = "agp" }
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-com-android-library = { id = "com.android.library", version.ref = "com-android-library" }
-
+com-android-library = { id = "com.android.library", version.ref = "agp" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 [bundles]
 

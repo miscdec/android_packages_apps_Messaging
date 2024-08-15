@@ -3,11 +3,9 @@ plugins {
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.com.android.library) apply false
-    // Root build.gradle
-    id("com.mikepenz.aboutlibraries.plugin") version "10.8.3"
-    id("com.google.devtools.ksp") version "1.9.10-1.0.13"
-
-
+    alias(libs.plugins.compose.compiler)
+    id("com.mikepenz.aboutlibraries.plugin") version "11.2.2"
+    alias(libs.plugins.kotlin.ksp)
 }
 
 
@@ -18,13 +16,9 @@ android {
         applicationId "com.android.messaging"
         minSdkVersion 21
         targetSdkVersion libs.versions.targetSdk.get().toString()
-        versionCode = libs.versions.verCode.get().toInteger()
-        versionName  = libs.versions.verName.get()
+        versionCode = getMyVersionCode()
+        versionName = getMyVersionName()
         multiDexEnabled = true
-        externalNativeBuild {
-            cmake {
-            }
-        }
         vectorDrawables {
             useSupportLibrary true
         }
@@ -46,7 +40,7 @@ android {
             path "jni/CMakeLists.txt"
         }
     }
-    ndkVersion '21.0.6113669'
+    ndkVersion '26.2.11394342'
     signingConfigs {
         aosp {
             // Generated from the AOSP platform key:
@@ -81,10 +75,7 @@ android {
     viewBinding {
         enabled = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion libs.versions.compose.compiler.version.get()
-    }
-    packaging {
+    packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
@@ -95,55 +86,59 @@ android {
 }
 
 dependencies {
-    implementation project(':external:common')
-    implementation project(':external:commonframesequence')
-    implementation project(':external:vcard')
-    implementation project(':external:chips')
-    implementation project(':external:photoviewer')
-    implementation project(':external:colorpicker')
+    implementation(project(':external:common'))
+    implementation(project(':external:commonframesequence'))
+    implementation(project(':external:vcard'))
+    implementation(project(':external:chips'))
+    implementation(project(':external:photoviewer'))
+    implementation(project(':external:colorpicker'))
 
     implementation(platform(libs.kotlin.bom))
 
     implementation(libs.androidx.multidex)
     implementation(libs.androidx.preference)
-    implementation libs.androidx.annotation
-    implementation libs.core.ktx
-    implementation libs.androidx.media
+    implementation(libs.androidx.annotation)
+    implementation(libs.core.ktx)
+    implementation(libs.androidx.media)
     implementation(libs.androidx.fragment.ktx)
 //    implementation libs.androidx.legacy.support.core.utils
 //    implementation libs.androidx.legacy.support.core.ui
 //    implementation libs.androidx.fragment
 //    implementation libs.androidx.legacy.support.v13
 //    api (libs.material)
-    implementation libs.appcompat
-    implementation libs.androidx.palette
-    implementation libs.androidx.recyclerview
-    implementation libs.androidx.exifinterface
+    implementation(libs.appcompat)
+    implementation(libs.androidx.palette)
+    implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.exifinterface)
 
     implementation(libs.androidx.room.runtime)
-    implementation libs.material
+    implementation(libs.material)
     ksp(libs.androidx.room.compiler)
     // optional - Kotlin Extensions and Coroutines support for Room
     implementation(libs.androidx.room.ktx)
 
-    implementation libs.activity.compose
+    implementation(libs.activity.compose)
 
-    implementation platform(libs.compose.bom)
-    implementation libs.ui
-    implementation libs.ui.graphics
-    implementation libs.ui.tooling.preview
+    implementation(platform(libs.compose.bom))
+    implementation(libs.ui)
+    implementation(libs.ui.graphics)
+    implementation(libs.ui.tooling.preview)
     implementation(libs.ui.viewbinding)
-    implementation libs.ui.material3
+    implementation(libs.androidx.material)
+    implementation(libs.ui.material3)
     implementation(libs.ui.material.icons.extended)
     implementation(libs.ui.material.icons.extended.android)
-    debugImplementation libs.ui.tooling
-    debugImplementation libs.ui.test.manifest
-    androidTestImplementation platform(libs.compose.bom)
-    androidTestImplementation libs.ui.test.junit4
+    debugImplementation(libs.ui.tooling)
+    debugImplementation(libs.ui.test.manifest)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.ui.test.junit4)
+
+    implementation(libs.accompanist.themeadapter.appcompat)
+    implementation(libs.accompanist.themeadapter.material3)
 
     implementation(libs.androidx.navigation.compose)
 
-    implementation libs.lifecycle.runtime.ktx
+    implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.extensions)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -151,8 +146,10 @@ dependencies {
 
     implementation(libs.androidx.work.runtime.ktx)
 
-    implementation(libs.aboutlibraries.core)
-    implementation(libs.aboutlibraries.compose)
+
+    implementation(libs.material3.preference)
+// Alternative Material3 based module
+    api(libs.aboutlibraries.compose)
 
     implementation libs.compose.settings.ui.m3
     implementation libs.compose.settings.storage.preferences
@@ -167,6 +164,25 @@ dependencies {
     api libs.carrier
 
 
+}
+
+String getMyVersionName() {
+    def stdout = new ByteArrayOutputStream()
+    if (rootProject.file("gradlew").exists())
+        exec { commandLine 'git', 'describe', '--tags', '--always', '--dirty'
+            standardOutput = stdout }
+    else // automatic build system, don't tag dirty
+        exec { commandLine 'git', 'describe', '--tags', '--always'; standardOutput = stdout }
+    return stdout.toString().trim().substring(1)
+}
+
+int getMyVersionCode() {
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-list', '--count', "HEAD"
+        standardOutput = stdout
+    }
+    return Integer.parseInt(stdout.toString().trim())
 }
 
 
