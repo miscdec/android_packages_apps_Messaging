@@ -109,6 +109,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/ic_attachment_dark"
+                        android:background="@drawable/transparent_button_background"
                         android:minHeight="48dp"
                         android:minWidth="48dp"
                         android:paddingTop="@dimen/compose_message_attachment_padding_topBottom"
@@ -155,13 +156,14 @@
                         android:importantForAccessibility="no"
                         app:contactIconSize="normal"
                         app:reveal="true"
-                        android:clickable="true" />
+                        android:clickable="true"
+                        android:focusable="true" />
                     <ImageButton
                         android:id="@+id/send_message_button"
                         android:layout_width="@dimen/conversation_message_contact_icon_size"
                         android:layout_height="@dimen/conversation_message_contact_icon_size"
                         android:src="@drawable/ic_send_light"
-                        android:background="@drawable/send_arrow_background"
+                        android:background="@drawable/transparent_button_background"
                         android:contentDescription="@string/sendButtonContentDescription"
                         android:visibility="gone" />
                 </FrameLayout>
@@ -179,7 +181,12 @@
         </LinearLayout>
     </LinearLayout>
 
-    <FrameLayout
+    <!--    <FrameLayout-->
+    <!--        android:id="@+id/mediapicker_container"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_weight="0" />-->
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/mediapicker_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

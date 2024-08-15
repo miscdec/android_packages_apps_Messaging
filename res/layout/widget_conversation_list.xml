@@ -26,8 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/widget_header_height"
         android:orientation="horizontal"
-        android:paddingLeft="8dip"
-        android:background="@drawable/widget_top_background"
+        android:paddingStart="8dip"
+        android:paddingEnd="8dip"
         android:gravity="center_vertical">
         <TextView
             android:id="@+id/widget_label"
@@ -45,13 +45,13 @@
             android:src="@drawable/ic_add_white"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/widget_new_conversation_content_description"
-            android:paddingRight="8dip"
+            android:paddingStart="8dip"
+            android:paddingEnd="8dip"
             android:paddingBottom="4dip" />
     </LinearLayout>
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#aaaaaa"
         android:importantForAccessibility="no"
         android:contentDescription="@null" />
     <ListView
@@ -60,6 +60,5 @@
         android:layout_height="0dip"
         android:layout_weight="1"
         android:cacheColorHint="#00000000"
-        android:divider="@android:drawable/divider_horizontal_bright"
-        android:background="@drawable/widget_bottom_background" />
+        android:divider="@android:drawable/divider_horizontal_bright" />
 </LinearLayout>
