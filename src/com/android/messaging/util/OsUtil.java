@@ -60,17 +60,39 @@ public class OsUtil {
         sIsAtLeastN = BuildCompat.isAtLeastN();
     }
 
-    private static final String[] sRequiredPermissions = new String[]{
-            // Required to read existing SMS threads
-            Manifest.permission.READ_SMS,
-            // Required for knowing the phone number, number of SIMs, etc.
-            Manifest.permission.READ_PHONE_STATE,
-            // This is not strictly required, but simplifies the contact picker scenarios
-            Manifest.permission.READ_CONTACTS,
-    };
+    private static final String[] sRequiredPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return new String[]{
+                    // Required to read existing SMS threads
+                    Manifest.permission.READ_SMS,
+                    // Required for knowing the phone number, number of SIMs, etc.
+                    Manifest.permission.READ_PHONE_STATE,
+                    // This is not strictly required, but simplifies the contact picker scenarios
+                    Manifest.permission.READ_CONTACTS,
+                    Manifest.permission.POST_NOTIFICATIONS
+            };
+        } else {
+            return new String[]{
+                    // Required to read existing SMS threads
+                    Manifest.permission.READ_SMS,
+                    // Required for knowing the phone number, number of SIMs, etc.
+                    Manifest.permission.READ_PHONE_STATE,
+                    // This is not strictly required, but simplifies the contact picker scenarios
+                    Manifest.permission.READ_CONTACTS,
+            };
+        }
+    }
     public static String[] recordAudioPermission = new String[]{Manifest.permission.RECORD_AUDIO};
     public static String[] cameraPermission = new String[]{Manifest.permission.CAMERA};
     public static String[] readContactsPermission = new String[]{Manifest.permission.READ_CONTACTS};
+
+    public static String[] notificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return new String[]{Manifest.permission.POST_NOTIFICATIONS};
+        } else {
+            return new String[]{};
+        }
+    }
 
     /**
      * @return True if the version of Android that we're running on is at least Ice Cream Sandwich
@@ -254,6 +276,10 @@ public class OsUtil {
 
     }
 
+    public static boolean hasNotificationPermission() {
+        return OsUtil.hasPermissions(notificationPermission());
+    }
+
     public static boolean hasRecordAudioPermission() {
         return OsUtil.hasPermissions(recordAudioPermission);
     }
@@ -261,7 +287,7 @@ public class OsUtil {
     /**
      * Returns array with the set of permissions that have not been granted from the given set.
      * The array will be empty if the app has all of the specified permissions. Note that calling
-     * {@link Activity#requestPermissions} for an already granted permission can prompt the user
+     * {@link android.app.Activity#requestPermissions} for an already granted permission can prompt the user
      * again, and its up to the app to only request permissions that are missing.
      */
     public static String[] getMissingPermissions(final String[] permissions) {
@@ -291,10 +317,10 @@ public class OsUtil {
      * Does the app have the minimum set of permissions required to operate.
      */
     public static boolean hasRequiredPermissions() {
-        return hasPermissions(sRequiredPermissions);
+        return hasPermissions(sRequiredPermissions());
     }
 
     public static String[] getMissingRequiredPermissions() {
-        return getMissingPermissions(sRequiredPermissions);
+        return getMissingPermissions(sRequiredPermissions());
     }
 }
