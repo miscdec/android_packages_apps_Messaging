@@ -2,10 +2,6 @@
 <resources translatable="false">
     <string name="action_start_search">Search</string>
 
-    <plurals name="search_results_title" translatable="false">
-        <item quantity="one">%1$s item matches“%2$s”search results</item>
-        <item quantity="other">%1$s items match“%2$s”search results</item>
-    </plurals>
 
     <string name="search">Messaging</string>
     <string name="search_empty">No matches.</string>

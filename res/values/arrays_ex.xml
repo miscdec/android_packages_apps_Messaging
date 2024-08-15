@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Modify by SPRD for bug 526653 Start -->
+    <!-- Choices for mms validity  -->
+    <string-array name="mms_validity_pref_entries">
+        <item>No Set</item>
+        <item>1 hour</item>
+        <item>12 hours</item>
+        <item>24 hours</item>
+        <item>2 days</item>
+        <item>Maximum</item>
+    </string-array>
+    <string-array name="mms_validity_pref_entry_values">
+        <item>"-1"</item>
+        <item>"3600"</item>
+        <item>"43200"</item>
+        <item>"86400"</item>
+        <item>"172800"</item>
+        <item>"604800"</item>
+    </string-array>
+
+    <!-- Choices for sms validity  -->
+    <string-array name="sms_validity_pref_entries">
+        <item>No Set</item>
+        <item>1 hour</item>
+        <item>12 hours</item>
+        <item>24 hours</item>
+        <item>2 days</item>
+        <item>Maximum</item>
+    </string-array>
+    <!-- Modify by SPRD for bug 579668 Start -->
+    <string-array name="sms_validity_pref_entry_values"><!--use minutes-->
+        <!-- TP_VP Not Set -->
+        <item>-1</item>
+        <!-- ((TP-VP + 1) x 5 minutes:11/143 -->
+        <item>60</item>
+        <item>720</item>
+        <!-- 12 hours + ((TP-VP -143) x 30 minutes):167 -->
+        <item>1440</item>
+        <!-- (TP-VP - 166) x 1 day:168 -->
+        <item>2880</item>
+        <!-- (TP-VP - 192) x 1 week:255 -->
+        <item>635040</item>
+    </string-array>
+    <!-- Modify by SPRD for bug 579668 End -->
+    <!-- Modify by SPRD for bug 526653 End -->
+    <!-- sprd #542214 start  -->
+    <string-array name="sms_save_to_sim_pref_entries">
+        <item>SMS has priority to save to sim</item>
+        <item>SMS has priority to save to messaging database</item>
+    </string-array>
+    <string-array name="sms_save_to_sim_pref_entry_values">
+        <item>"true"</item>
+        <item>"false"</item>
+    </string-array>
+    <!-- sprd #542214 end -->
+
+    <!-- SPRD: Add for bug 562203 start -->
+    <string-array name="prefEntries_EncodeType" translatable="false">
+        <item>Auto</item>
+        <item>7bit coding</item>
+    </string-array>
+    <string-array name="prefValues_EncodeType">
+        <item>0</item>
+        <item>1</item>
+        <item>3</item>
+    </string-array>
+    <!-- SPRD: Add for bug 562203 end -->
+    <string-array name="pref_mms_size_limit_choices" translatable="false">
+        <item>300K</item>
+        <item>600K</item>
+        <item>1M</item>
+    </string-array>
+    <string-array name="pref_mms_size_limit_values" translatable="false">
+        <item>300</item>
+        <item>600</item>
+        <item>1024</item>
+    </string-array>
+</resources>
