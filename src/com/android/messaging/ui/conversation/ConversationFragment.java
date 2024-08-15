@@ -33,7 +33,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -85,7 +84,6 @@ import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
 import com.android.messaging.ui.AttachmentPreview;
 import com.android.messaging.ui.BugleActionBarActivity;
-import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.animation.PopupTransitionAnimation;
@@ -527,7 +525,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // Build the input manager with all its required dependencies and pass it along to the
         // compose message view.
         final ConversationInputManager inputManager = new ConversationInputManager(
-                getActivity(), this, mComposeMessageView, mHost, getFragmentManagerToUse(),
+                requireActivity(), this, mComposeMessageView, mHost, getFragmentManagerToUse(),
                 mBinding, mComposeMessageView.getDraftDataModel(), savedInstanceState);
         mComposeMessageView.setInputManager(inputManager);
         mComposeMessageView.setConversationDataModel(BindingBase.createBindingReference(mBinding));
@@ -580,7 +578,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.conversation_fragment, container, false);
-        mRecyclerView = (RecyclerView) view.findViewById(android.R.id.list);
+        mRecyclerView = view.findViewById(android.R.id.list);
         final LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         manager.setStackFromEnd(true);
         manager.setReverseLayout(false);
@@ -610,7 +608,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     final Rect composeBubbleRect =
                             UiUtils.getMeasuredBoundsOnScreen(composeBubbleView);
                     final AttachmentPreview attachmentView =
-                            (AttachmentPreview) mComposeMessageView.findViewById(
+                            mComposeMessageView.findViewById(
                                     R.id.attachment_draft_view);
                     final Rect attachmentRect = UiUtils.getMeasuredBoundsOnScreen(attachmentView);
                     if (attachmentView.getVisibility() == View.VISIBLE) {
@@ -1244,10 +1242,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     public boolean onBackPressed() {
-        if (mComposeMessageView.onBackPressed()) {
-            return true;
-        }
-        return false;
+        return mComposeMessageView.onBackPressed();
     }
 
     public boolean onNavigationUpPressed() {
@@ -1478,12 +1473,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     @Override
     public SimSelectorView getSimSelectorView() {
-        return (SimSelectorView) getView().findViewById(R.id.sim_selector);
+        return getView().findViewById(R.id.sim_selector);
     }
 
     @Override
     public MediaPicker createMediaPicker() {
-        return new MediaPicker(getActivity());
+        return new MediaPicker();
     }
 
     @Override
@@ -1542,9 +1537,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     private void updateActionAndStatusBarColor(final ActionBar actionBar) {
-        final int themeColor = ConversationDrawables.get().getConversationThemeColor();
-        actionBar.setBackgroundDrawable(new ColorDrawable(themeColor));
-        UiUtils.setStatusBarColor(getActivity(), themeColor);
+//        final int themeColor = ConversationDrawables.get().getConversationThemeColor();
+//        actionBar.setBackgroundDrawable(new ColorDrawable(themeColor));
+//        UiUtils.setStatusBarColor(getActivity(), themeColor);
     }
 
     public void updateActionBar(final ActionBar actionBar) {
@@ -1571,7 +1566,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             }
 
             final TextView conversationNameView =
-                    (TextView) customView.findViewById(R.id.conversation_title);
+                    customView.findViewById(R.id.conversation_title);
             final String conversationName = getConversationName();
             if (!TextUtils.isEmpty(conversationName)) {
                 // RTL : To format conversation title if it happens to be phone numbers.

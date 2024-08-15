@@ -20,7 +20,6 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -83,8 +82,8 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setBackgroundDrawable(new ColorDrawable(
-                getResources().getColor(R.color.action_bar_background_color)));
+//        actionBar.setBackgroundDrawable(new ColorDrawable(
+//                getResources().getColor(R.color.action_bar_background_color)));
         actionBar.show();
         super.updateActionBar(actionBar);
     }
@@ -193,7 +192,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         ImageView mCloseButton = null;
         SearchView searchView = this.mSearchView;
         if (searchView != null) {
-            mCloseButton = (ImageView) searchView.findViewById(closeBtnId);
+            mCloseButton = searchView.findViewById(closeBtnId);
         }
         if (mCloseButton != null) {
             mCloseButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_cancel_small_light));

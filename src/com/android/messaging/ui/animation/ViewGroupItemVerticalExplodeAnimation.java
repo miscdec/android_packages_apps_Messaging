@@ -25,12 +25,13 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import androidx.core.view.ViewCompat;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroupOverlay;
 import android.view.ViewOverlay;
 import android.widget.FrameLayout;
+
+import androidx.core.view.ViewCompat;
 
 import com.android.messaging.R;
 import com.android.messaging.util.ImageUtils;
@@ -156,8 +157,8 @@ public class ViewGroupItemVerticalExplodeAnimation {
                 expandLayer.setTop(viewRect.top);
                 expandLayer.setBottom(viewRect.bottom);
                 expandLayer.setRight(viewRect.right);
-                expandLayer.setBackgroundColor(resources.getColor(
-                        R.color.conversation_background));
+//                expandLayer.setBackgroundColor(resources.getColor(
+//                        R.color.conversation_background));
                 ViewCompat.setElevation(expandLayer, elevation);
 
                 // Conditionally stage the snapshot in the overlay.

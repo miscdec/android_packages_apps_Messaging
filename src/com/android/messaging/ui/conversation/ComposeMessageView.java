@@ -30,7 +30,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.format.Formatter;
 import android.util.AttributeSet;
-import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
@@ -164,7 +163,7 @@ public class ComposeMessageView extends LinearLayout
     };
 
     public ComposeMessageView(final Context context, final AttributeSet attrs) {
-        super(new ContextThemeWrapper(context, R.style.ColorAccentBlueOverrideStyle), attrs);
+        super(context, attrs);
         mOriginalContext = context;
         mBinding = BindingBase.createBinding(this);
     }
@@ -196,7 +195,7 @@ public class ComposeMessageView extends LinearLayout
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mComposeEditText = (PlainTextEditText) findViewById(
+        mComposeEditText = findViewById(
                 R.id.compose_message_text);
         mComposeEditText.setOnEditorActionListener(this);
         mComposeEditText.addTextChangedListener(this);
@@ -254,7 +253,7 @@ public class ComposeMessageView extends LinearLayout
             }
         });
 
-        mComposeSubjectText = (PlainTextEditText) findViewById(
+        mComposeSubjectText = findViewById(
                 R.id.compose_subject_text);
         // We need the listener to change the avatar to the send button when the user starts
         // typing a subject without a message.
@@ -265,7 +264,7 @@ public class ComposeMessageView extends LinearLayout
                 new LengthFilter(MmsConfig.get(ParticipantData.DEFAULT_SELF_SUB_ID)
                         .getMaxSubjectLength())});
 
-        mDeleteSubjectButton = (ImageButton) findViewById(R.id.delete_subject_button);
+        mDeleteSubjectButton = findViewById(R.id.delete_subject_button);
         mDeleteSubjectButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View clickView) {
@@ -277,7 +276,7 @@ public class ComposeMessageView extends LinearLayout
 
         mSubjectView = findViewById(R.id.subject_view);
 
-        mSendButton = (ImageButton) findViewById(R.id.send_message_button);
+        mSendButton = findViewById(R.id.send_message_button);
         mSendButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View clickView) {
@@ -315,7 +314,7 @@ public class ComposeMessageView extends LinearLayout
         });
 
         mAttachMediaButton =
-                (ImageButton) findViewById(R.id.attach_media_button);
+                findViewById(R.id.attach_media_button);
         mAttachMediaButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View clickView) {
@@ -324,11 +323,11 @@ public class ComposeMessageView extends LinearLayout
             }
         });
 
-        mAttachmentPreview = (AttachmentPreview) findViewById(R.id.attachment_draft_view);
+        mAttachmentPreview = findViewById(R.id.attachment_draft_view);
         mAttachmentPreview.setComposeMessageView(this);
 
-        mMessageBodySize = (TextView) findViewById(R.id.message_body_size);
-        mMmsIndicator = (TextView) findViewById(R.id.mms_indicator);
+        mMessageBodySize = findViewById(R.id.message_body_size);
+        mMmsIndicator = findViewById(R.id.mms_indicator);
     }
 
     private void hideAttachmentsWhenShowingSims(final boolean simPickerVisible) {

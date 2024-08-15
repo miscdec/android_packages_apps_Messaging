@@ -21,7 +21,6 @@ import android.database.Cursor;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import androidx.annotation.Nullable;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
@@ -40,6 +39,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
@@ -120,43 +121,21 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         mData = new ConversationMessageData();
     }
 
-    @Override
-    protected void onFinishInflate() {
-        mContactIconView = (ContactIconView) findViewById(R.id.conversation_icon);
-        mContactIconView.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(final View view) {
-                ConversationMessageView.this.performLongClick();
-                return true;
-            }
-        });
+    final AttachmentViewBinder mAudioViewBinder = new AttachmentViewBinder() {
+        @Override
+        public void bindView(final View view, final MessagePartData attachment) {
+            final AudioAttachmentView audioView = (AudioAttachmentView) view;
+            audioView.bindMessagePartData(attachment, mData.getIsIncoming(), isSelected());
+//            audioView.setBackground(ConversationDrawables.get().getBubbleDrawable(
+//                    isSelected(), mData.getIsIncoming(), false /* needArrow */,
+//                    mData.hasIncomingErrorStatus(), mData.getSenderContactLookupKey()));
+        }
 
-        mMessageAttachmentsView = (LinearLayout) findViewById(R.id.message_attachments);
-        mMultiAttachmentView = (MultiAttachmentLayout) findViewById(R.id.multiple_attachments);
-        mMultiAttachmentView.setOnAttachmentClickListener(this);
-
-        mMessageImageView = (AsyncImageView) findViewById(R.id.message_image);
-        mMessageImageView.setOnClickListener(this);
-        mMessageImageView.setOnLongClickListener(this);
-
-        mMessageTextView = (TextView) findViewById(R.id.message_text);
-        mMessageTextView.setOnClickListener(this);
-        IgnoreLinkLongClickHelper.ignoreLinkLongClick(mMessageTextView, this);
-
-        mStatusTextView = (TextView) findViewById(R.id.message_status);
-        mTitleTextView = (TextView) findViewById(R.id.message_title);
-        mMmsInfoTextView = (TextView) findViewById(R.id.mms_info);
-        mMessageTitleLayout = (LinearLayout) findViewById(R.id.message_title_layout);
-        mSenderNameTextView = (TextView) findViewById(R.id.message_sender_name);
-        mMessageBubble = (ConversationMessageBubbleView) findViewById(R.id.message_content);
-        mSubjectView = findViewById(R.id.subject_container);
-        mSubjectLabel = (TextView) mSubjectView.findViewById(R.id.subject_label);
-        mSubjectText = (TextView) mSubjectView.findViewById(R.id.subject_text);
-        mDeliveredBadge = findViewById(R.id.smsDeliveredBadge);
-        mMessageMetadataView = (ViewGroup) findViewById(R.id.message_metadata);
-        mMessageTextAndInfoView = (ViewGroup) findViewById(R.id.message_text_and_info);
-        mSimNameView = (TextView) findViewById(R.id.sim_name);
-    }
+        @Override
+        public void unbind(final View view) {
+            ((AudioAttachmentView) view).bindMessagePartData(null, mData.getIsIncoming(), false);
+        }
+    };
 
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
@@ -299,188 +278,37 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         }
         final String subjectText = MmsUtils.cleanseMmsSubject(getResources(),
                 mData.getMmsSubject());
-        if (!TextUtils.isEmpty(subjectText)) {
-            return true;
-        }
-        return false;
+        return !TextUtils.isEmpty(subjectText);
     }
-
-    private void updateViewContent() {
-        updateMessageContent();
-        int titleResId = -1;
-        int statusResId = -1;
-        String statusText = null;
-        switch(mData.getStatus()) {
-            case MessageData.BUGLE_STATUS_INCOMING_AUTO_DOWNLOADING:
-            case MessageData.BUGLE_STATUS_INCOMING_MANUAL_DOWNLOADING:
-            case MessageData.BUGLE_STATUS_INCOMING_RETRYING_AUTO_DOWNLOAD:
-            case MessageData.BUGLE_STATUS_INCOMING_RETRYING_MANUAL_DOWNLOAD:
-                titleResId = R.string.message_title_downloading;
-                statusResId = R.string.message_status_downloading;
-                break;
-
-            case MessageData.BUGLE_STATUS_INCOMING_YET_TO_MANUAL_DOWNLOAD:
-                if (!OsUtil.isSecondaryUser()) {
-                    titleResId = R.string.message_title_manual_download;
-                    if (isSelected()) {
-                        statusResId = R.string.message_status_download_action;
-                    } else {
-                        statusResId = R.string.message_status_download;
-                    }
-                }
-                break;
-
-            case MessageData.BUGLE_STATUS_INCOMING_EXPIRED_OR_NOT_AVAILABLE:
-                if (!OsUtil.isSecondaryUser()) {
-                    titleResId = R.string.message_title_download_failed;
-                    statusResId = R.string.message_status_download_error;
-                }
-                break;
-
-            case MessageData.BUGLE_STATUS_INCOMING_DOWNLOAD_FAILED:
-                if (!OsUtil.isSecondaryUser()) {
-                    titleResId = R.string.message_title_download_failed;
-                    if (isSelected()) {
-                        statusResId = R.string.message_status_download_action;
-                    } else {
-                        statusResId = R.string.message_status_download;
-                    }
-                }
-                break;
-
-            case MessageData.BUGLE_STATUS_OUTGOING_YET_TO_SEND:
-            case MessageData.BUGLE_STATUS_OUTGOING_SENDING:
-                statusResId = R.string.message_status_sending;
-                break;
-
-            case MessageData.BUGLE_STATUS_OUTGOING_RESENDING:
-            case MessageData.BUGLE_STATUS_OUTGOING_AWAITING_RETRY:
-                statusResId = R.string.message_status_send_retrying;
-                break;
-
-            case MessageData.BUGLE_STATUS_OUTGOING_FAILED_EMERGENCY_NUMBER:
-                statusResId = R.string.message_status_send_failed_emergency_number;
-                break;
-
-            case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
-                // don't show the error state unless we're the default sms app
-                if (PhoneUtils.getDefault().isDefaultSmsApp()) {
-                    if (isSelected()) {
-                        statusResId = R.string.message_status_resend;
-                    } else {
-                        statusResId = MmsUtils.mapRawStatusToErrorResourceId(
-                                mData.getStatus(), mData.getRawTelephonyStatus());
-                    }
-                    break;
-                }
-                // FALL THROUGH HERE
-
-            case MessageData.BUGLE_STATUS_OUTGOING_COMPLETE:
-            case MessageData.BUGLE_STATUS_OUTGOING_DELIVERED:
-            case MessageData.BUGLE_STATUS_INCOMING_COMPLETE:
-            default:
-                if (!mData.getCanClusterWithNextMessage()) {
-                    statusText = mData.getFormattedReceivedTimeStamp();
-                }
-                break;
+    final AttachmentViewBinder mVCardViewBinder = new AttachmentViewBinder() {
+        @Override
+        public void bindView(final View view, final MessagePartData attachment) {
+            final PersonItemView personView = (PersonItemView) view;
+            personView.bind(DataModel.get().createVCardContactItemData(getContext(),
+                    attachment));
+//            personView.setBackground(ConversationDrawables.get().getBubbleDrawable(
+//                    isSelected(), mData.getIsIncoming(), false /* needArrow */,
+//                    mData.hasIncomingErrorStatus(), mData.getSenderContactLookupKey()));
+            final int nameTextColorRes;
+            final int detailsTextColorRes;
+            if (isSelected()) {
+                nameTextColorRes = R.color.message_text_color_incoming;
+                detailsTextColorRes = R.color.message_text_color_incoming;
+            } else {
+                nameTextColorRes = mData.getIsIncoming() ? R.color.message_text_color_incoming
+                        : R.color.message_text_color_outgoing;
+                detailsTextColorRes = mData.getIsIncoming() ? R.color.timestamp_text_incoming
+                        : R.color.timestamp_text_outgoing;
+            }
+            personView.setNameTextColor(getResources().getColor(nameTextColorRes));
+            personView.setDetailsTextColor(getResources().getColor(detailsTextColorRes));
         }
 
-        final boolean titleVisible = (titleResId >= 0);
-        if (titleVisible) {
-            final String titleText = getResources().getString(titleResId);
-            mTitleTextView.setText(titleText);
-
-            final String mmsInfoText = getResources().getString(
-                    R.string.mms_info,
-                    Formatter.formatFileSize(getContext(), mData.getSmsMessageSize()),
-                    DateUtils.formatDateTime(
-                            getContext(),
-                            mData.getMmsExpiry(),
-                            DateUtils.FORMAT_SHOW_DATE |
-                            DateUtils.FORMAT_SHOW_TIME |
-                            DateUtils.FORMAT_NUMERIC_DATE |
-                            DateUtils.FORMAT_NO_YEAR));
-            mMmsInfoTextView.setText(mmsInfoText);
-            mMessageTitleLayout.setVisibility(View.VISIBLE);
-        } else {
-            mMessageTitleLayout.setVisibility(View.GONE);
+        @Override
+        public void unbind(final View view) {
+            ((PersonItemView) view).bind(null);
         }
-
-        final String subjectText = MmsUtils.cleanseMmsSubject(getResources(),
-                mData.getMmsSubject());
-        final boolean subjectVisible = !TextUtils.isEmpty(subjectText);
-
-        final boolean senderNameVisible = !mOneOnOne && !mData.getCanClusterWithNextMessage()
-                && mData.getIsIncoming();
-        if (senderNameVisible) {
-            mSenderNameTextView.setText(mData.getSenderDisplayName());
-            mSenderNameTextView.setVisibility(View.VISIBLE);
-        } else {
-            mSenderNameTextView.setVisibility(View.GONE);
-        }
-
-        if (statusResId >= 0) {
-            statusText = getResources().getString(statusResId);
-        }
-
-        // We set the text even if the view will be GONE for accessibility
-        mStatusTextView.setText(statusText);
-        final boolean statusVisible = !TextUtils.isEmpty(statusText);
-        if (statusVisible) {
-            mStatusTextView.setVisibility(View.VISIBLE);
-        } else {
-            mStatusTextView.setVisibility(View.GONE);
-        }
-
-        final boolean deliveredBadgeVisible =
-                mData.getStatus() == MessageData.BUGLE_STATUS_OUTGOING_DELIVERED;
-        mDeliveredBadge.setVisibility(deliveredBadgeVisible ? View.VISIBLE : View.GONE);
-
-        // Update the sim indicator.
-        final boolean showSimIconAsIncoming = mData.getIsIncoming() &&
-                (!mData.hasAttachments() || shouldShowMessageTextBubble());
-        final SubscriptionListEntry subscriptionEntry =
-                mHost.getSubscriptionEntryForSelfParticipant(mData.getSelfParticipantId(),
-                        true /* excludeDefault */);
-        final boolean simNameVisible = subscriptionEntry != null &&
-                !TextUtils.isEmpty(subscriptionEntry.displayName) &&
-                !mData.getCanClusterWithNextMessage();
-        if (simNameVisible) {
-            final String simNameText = mData.getIsIncoming() ? getResources().getString(
-                    R.string.incoming_sim_name_text, subscriptionEntry.displayName) :
-                        subscriptionEntry.displayName;
-            mSimNameView.setText(simNameText);
-            mSimNameView.setTextColor(showSimIconAsIncoming ? getResources().getColor(
-                    R.color.timestamp_text_incoming) : subscriptionEntry.displayColor);
-            mSimNameView.setVisibility(VISIBLE);
-        } else {
-            mSimNameView.setText(null);
-            mSimNameView.setVisibility(GONE);
-        }
-
-        final boolean metadataVisible = senderNameVisible || statusVisible
-                || deliveredBadgeVisible || simNameVisible;
-        mMessageMetadataView.setVisibility(metadataVisible ? View.VISIBLE : View.GONE);
-
-        final boolean messageTextAndOrInfoVisible = titleVisible || subjectVisible
-                || mData.hasText() || metadataVisible;
-        mMessageTextAndInfoView.setVisibility(
-                messageTextAndOrInfoVisible ? View.VISIBLE : View.GONE);
-
-        if (shouldShowSimplifiedVisualStyle()) {
-            mContactIconView.setVisibility(View.GONE);
-            mContactIconView.setImageResourceUri(null);
-        } else {
-            mContactIconView.setVisibility(View.VISIBLE);
-            final Uri avatarUri = AvatarUriUtil.createAvatarUri(
-                    mData.getSenderProfilePhotoUri(),
-                    mData.getSenderFullName(),
-                    mData.getSenderNormalizedDestination(),
-                    mData.getSenderContactLookupKey());
-            mContactIconView.setImageResourceUri(avatarUri, mData.getSenderContactId(),
-                    mData.getSenderContactLookupKey(), mData.getSenderNormalizedDestination());
-        }
-    }
+    };
 
     private void updateMessageContent() {
         // We must update the text before the attachments since we search the text to see if we
@@ -1115,51 +943,221 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         }
     };
 
-    final AttachmentViewBinder mAudioViewBinder = new AttachmentViewBinder() {
-        @Override
-        public void bindView(final View view, final MessagePartData attachment) {
-            final AudioAttachmentView audioView = (AudioAttachmentView) view;
-            audioView.bindMessagePartData(attachment, mData.getIsIncoming(), isSelected());
-            audioView.setBackground(ConversationDrawables.get().getBubbleDrawable(
-                    isSelected(), mData.getIsIncoming(), false /* needArrow */,
-                    mData.hasIncomingErrorStatus(), mData.getSenderContactLookupKey()));
-        }
-
-        @Override
-        public void unbind(final View view) {
-            ((AudioAttachmentView) view).bindMessagePartData(null, mData.getIsIncoming(), false);
-        }
-    };
-
-    final AttachmentViewBinder mVCardViewBinder = new AttachmentViewBinder() {
-        @Override
-        public void bindView(final View view, final MessagePartData attachment) {
-            final PersonItemView personView = (PersonItemView) view;
-            personView.bind(DataModel.get().createVCardContactItemData(getContext(),
-                    attachment));
-            personView.setBackground(ConversationDrawables.get().getBubbleDrawable(
-                    isSelected(), mData.getIsIncoming(), false /* needArrow */,
-                    mData.hasIncomingErrorStatus(), mData.getSenderContactLookupKey()));
-            final int nameTextColorRes;
-            final int detailsTextColorRes;
-            if (isSelected()) {
-                nameTextColorRes = R.color.message_text_color_incoming;
-                detailsTextColorRes = R.color.message_text_color_incoming;
-            } else {
-                nameTextColorRes = mData.getIsIncoming() ? R.color.message_text_color_incoming
-                        : R.color.message_text_color_outgoing;
-                detailsTextColorRes = mData.getIsIncoming() ? R.color.timestamp_text_incoming
-                        : R.color.timestamp_text_outgoing;
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        mContactIconView = findViewById(R.id.conversation_icon);
+        mContactIconView.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(final View view) {
+                ConversationMessageView.this.performLongClick();
+                return true;
             }
-            personView.setNameTextColor(getResources().getColor(nameTextColorRes));
-            personView.setDetailsTextColor(getResources().getColor(detailsTextColorRes));
+        });
+
+        mMessageAttachmentsView = findViewById(R.id.message_attachments);
+        mMultiAttachmentView = findViewById(R.id.multiple_attachments);
+        mMultiAttachmentView.setOnAttachmentClickListener(this);
+
+        mMessageImageView = findViewById(R.id.message_image);
+        mMessageImageView.setOnClickListener(this);
+        mMessageImageView.setOnLongClickListener(this);
+
+        mMessageTextView = findViewById(R.id.message_text);
+        mMessageTextView.setOnClickListener(this);
+        IgnoreLinkLongClickHelper.ignoreLinkLongClick(mMessageTextView, this);
+
+        mStatusTextView = findViewById(R.id.message_status);
+        mTitleTextView = findViewById(R.id.message_title);
+        mMmsInfoTextView = findViewById(R.id.mms_info);
+        mMessageTitleLayout = findViewById(R.id.message_title_layout);
+        mSenderNameTextView = findViewById(R.id.message_sender_name);
+        mMessageBubble = (ConversationMessageBubbleView) findViewById(R.id.message_content);
+        mSubjectView = findViewById(R.id.subject_container);
+        mSubjectLabel = mSubjectView.findViewById(R.id.subject_label);
+        mSubjectText = mSubjectView.findViewById(R.id.subject_text);
+        mDeliveredBadge = findViewById(R.id.smsDeliveredBadge);
+        mMessageMetadataView = findViewById(R.id.message_metadata);
+        mMessageTextAndInfoView = findViewById(R.id.message_text_and_info);
+        mSimNameView = findViewById(R.id.sim_name);
+    }
+
+    private void updateViewContent() {
+        updateMessageContent();
+        int titleResId = -1;
+        int statusResId = -1;
+        String statusText = null;
+        switch(mData.getStatus()) {
+            case MessageData.BUGLE_STATUS_INCOMING_AUTO_DOWNLOADING:
+            case MessageData.BUGLE_STATUS_INCOMING_MANUAL_DOWNLOADING:
+            case MessageData.BUGLE_STATUS_INCOMING_RETRYING_AUTO_DOWNLOAD:
+            case MessageData.BUGLE_STATUS_INCOMING_RETRYING_MANUAL_DOWNLOAD:
+                titleResId = R.string.message_title_downloading;
+                statusResId = R.string.message_status_downloading;
+                break;
+
+            case MessageData.BUGLE_STATUS_INCOMING_YET_TO_MANUAL_DOWNLOAD:
+                if (!OsUtil.isSecondaryUser()) {
+                    titleResId = R.string.message_title_manual_download;
+                    if (isSelected()) {
+                        statusResId = R.string.message_status_download_action;
+                    } else {
+                        statusResId = R.string.message_status_download;
+                    }
+                }
+                break;
+
+            case MessageData.BUGLE_STATUS_INCOMING_EXPIRED_OR_NOT_AVAILABLE:
+                if (!OsUtil.isSecondaryUser()) {
+                    titleResId = R.string.message_title_download_failed;
+                    statusResId = R.string.message_status_download_error;
+                }
+                break;
+
+            case MessageData.BUGLE_STATUS_INCOMING_DOWNLOAD_FAILED:
+                if (!OsUtil.isSecondaryUser()) {
+                    titleResId = R.string.message_title_download_failed;
+                    if (isSelected()) {
+                        statusResId = R.string.message_status_download_action;
+                    } else {
+                        statusResId = R.string.message_status_download;
+                    }
+                }
+                break;
+
+            case MessageData.BUGLE_STATUS_OUTGOING_YET_TO_SEND:
+            case MessageData.BUGLE_STATUS_OUTGOING_SENDING:
+                statusResId = R.string.message_status_sending;
+                break;
+
+            case MessageData.BUGLE_STATUS_OUTGOING_RESENDING:
+            case MessageData.BUGLE_STATUS_OUTGOING_AWAITING_RETRY:
+                statusResId = R.string.message_status_send_retrying;
+                break;
+
+            case MessageData.BUGLE_STATUS_OUTGOING_FAILED_EMERGENCY_NUMBER:
+                statusResId = R.string.message_status_send_failed_emergency_number;
+                break;
+
+            case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
+                // don't show the error state unless we're the default sms app
+                if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+                    if (isSelected()) {
+                        statusResId = R.string.message_status_resend;
+                    } else {
+                        statusResId = MmsUtils.mapRawStatusToErrorResourceId(
+                                mData.getStatus(), mData.getRawTelephonyStatus());
+                    }
+                    break;
+                }
+                // FALL THROUGH HERE
+
+            case MessageData.BUGLE_STATUS_OUTGOING_COMPLETE:
+            case MessageData.BUGLE_STATUS_OUTGOING_DELIVERED:
+            case MessageData.BUGLE_STATUS_INCOMING_COMPLETE:
+            default:
+                if (!mData.getCanClusterWithNextMessage()) {
+                    statusText = mData.getFormattedReceivedTimeStamp();
+                }
+                break;
         }
 
-        @Override
-        public void unbind(final View view) {
-            ((PersonItemView) view).bind(null);
+        final boolean titleVisible = (titleResId >= 0);
+        if (titleVisible) {
+            final String titleText = getResources().getString(titleResId);
+            mTitleTextView.setText(titleText);
+
+            final String mmsInfoText = getResources().getString(
+                    R.string.mms_info,
+                    Formatter.formatFileSize(getContext(), mData.getSmsMessageSize()),
+                    DateUtils.formatDateTime(
+                            getContext(),
+                            mData.getMmsExpiry(),
+                            DateUtils.FORMAT_SHOW_DATE |
+                            DateUtils.FORMAT_SHOW_TIME |
+                            DateUtils.FORMAT_NUMERIC_DATE |
+                            DateUtils.FORMAT_NO_YEAR));
+            mMmsInfoTextView.setText(mmsInfoText);
+            mMessageTitleLayout.setVisibility(View.VISIBLE);
+        } else {
+            mMessageTitleLayout.setVisibility(View.GONE);
         }
-    };
+
+        final String subjectText = MmsUtils.cleanseMmsSubject(getResources(),
+                mData.getMmsSubject());
+        final boolean subjectVisible = !TextUtils.isEmpty(subjectText);
+
+        final boolean senderNameVisible = !mOneOnOne && !mData.getCanClusterWithNextMessage()
+                && mData.getIsIncoming();
+        if (senderNameVisible) {
+            mSenderNameTextView.setText(mData.getSenderDisplayName());
+            mSenderNameTextView.setVisibility(View.VISIBLE);
+        } else {
+            mSenderNameTextView.setVisibility(View.GONE);
+        }
+
+        if (statusResId >= 0) {
+            statusText = getResources().getString(statusResId);
+        }
+
+        // We set the text even if the view will be GONE for accessibility
+        mStatusTextView.setText(statusText);
+        final boolean statusVisible = !TextUtils.isEmpty(statusText);
+        if (statusVisible) {
+            mStatusTextView.setVisibility(View.VISIBLE);
+        } else {
+            mStatusTextView.setVisibility(View.GONE);
+        }
+
+        final boolean deliveredBadgeVisible =
+                mData.getStatus() == MessageData.BUGLE_STATUS_OUTGOING_DELIVERED;
+        mDeliveredBadge.setVisibility(deliveredBadgeVisible ? View.VISIBLE : View.GONE);
+
+        // Update the sim indicator.
+        final boolean showSimIconAsIncoming = mData.getIsIncoming() &&
+                (!mData.hasAttachments() || shouldShowMessageTextBubble());
+        final SubscriptionListEntry subscriptionEntry =
+                mHost.getSubscriptionEntryForSelfParticipant(mData.getSelfParticipantId(),
+                        true /* excludeDefault */);
+        final boolean simNameVisible = subscriptionEntry != null &&
+                !TextUtils.isEmpty(subscriptionEntry.displayName) &&
+                !mData.getCanClusterWithNextMessage();
+        if (simNameVisible) {
+            final String simNameText = mData.getIsIncoming() ? getResources().getString(
+                    R.string.incoming_sim_name_text, subscriptionEntry.displayDestination) :
+                    subscriptionEntry.displayDestination;
+            mSimNameView.setText(simNameText);
+            mSimNameView.setTextColor(showSimIconAsIncoming ? getResources().getColor(
+                    R.color.timestamp_text_incoming) : subscriptionEntry.displayColor);
+            mSimNameView.setVisibility(VISIBLE);
+        } else {
+            mSimNameView.setText(null);
+            mSimNameView.setVisibility(GONE);
+        }
+
+        final boolean metadataVisible = senderNameVisible || statusVisible
+                || deliveredBadgeVisible || simNameVisible;
+        mMessageMetadataView.setVisibility(metadataVisible ? View.VISIBLE : View.GONE);
+
+        final boolean messageTextAndOrInfoVisible = titleVisible || subjectVisible
+                || mData.hasText() || metadataVisible;
+        mMessageTextAndInfoView.setVisibility(
+                messageTextAndOrInfoVisible ? View.VISIBLE : View.GONE);
+
+        if (shouldShowSimplifiedVisualStyle()) {
+            mContactIconView.setVisibility(View.GONE);
+            mContactIconView.setImageResourceUri(null);
+        } else {
+            mContactIconView.setVisibility(View.VISIBLE);
+            final Uri avatarUri = AvatarUriUtil.createAvatarUri(
+                    mData.getSenderProfilePhotoUri(),
+                    mData.getSenderFullName(),
+                    mData.getSenderNormalizedDestination(),
+                    mData.getSenderContactLookupKey());
+            mContactIconView.setImageResourceUri(avatarUri, mData.getSenderContactId(),
+                    mData.getSenderContactLookupKey(), mData.getSenderNormalizedDestination());
+        }
+    }
 
     /**
      * A helper class that allows us to handle long clicks on linkified message text view (i.e. to
