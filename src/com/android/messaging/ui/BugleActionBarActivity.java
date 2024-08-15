@@ -16,15 +16,15 @@
 
 package com.android.messaging.ui;
 
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.messaging.R;
 import com.android.messaging.util.BugleActivityUtil;
@@ -81,7 +81,7 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
 
     @Override
     protected void onRestart() {
-        super.onStop();
+        super.onRestart();
         if (LogUtil.isLoggable(LogUtil.BUGLE_TAG, LogUtil.VERBOSE)) {
             LogUtil.v(LogUtil.BUGLE_TAG, this.getLocalClassName() + ".onRestart");
         }
@@ -176,11 +176,8 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         mActionBarMenu = menu;
-        if (mActionMode != null &&
-                mActionMode.getCallback().onCreateActionMode(mActionMode, menu)) {
-            return true;
-        }
-        return false;
+        return mActionMode != null &&
+                mActionMode.getCallback().onCreateActionMode(mActionMode, menu);
     }
 
     @Override
@@ -347,8 +344,8 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayShowCustomEnabled(false);
             mActionMode.getCallback().onPrepareActionMode(mActionMode, mActionBarMenu);
-            actionBar.setBackgroundDrawable(new ColorDrawable(
-                    getResources().getColor(R.color.contextual_action_bar_background_color)));
+//            actionBar.setBackgroundDrawable(new ColorDrawable(
+//                    getResources().getColor(R.color.contextual_action_bar_background_color)));
             actionBar.setHomeAsUpIndicator(R.drawable.ic_cancel_small_dark);
             actionBar.show();
         }

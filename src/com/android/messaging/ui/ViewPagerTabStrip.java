@@ -28,7 +28,7 @@ import com.android.messaging.R;
 import com.android.messaging.util.OsUtil;
 
 public class ViewPagerTabStrip extends LinearLayout {
-    private int mSelectedUnderlineThickness;
+    private final int mSelectedUnderlineThickness;
     private final Paint mSelectedUnderlinePaint;
 
     private int mIndexForSelection;
@@ -45,13 +45,13 @@ public class ViewPagerTabStrip extends LinearLayout {
 
         mSelectedUnderlineThickness =
                 res.getDimensionPixelSize(R.dimen.pager_tab_underline_selected);
-        int underlineColor = res.getColor(R.color.contact_picker_tab_underline);
-        int backgroundColor = res.getColor(R.color.action_bar_background_color);
+//        int underlineColor = res.getColor(R.color.contact_picker_tab_underline);
+//        int backgroundColor = res.getColor(R.color.action_bar_background_color);
 
         mSelectedUnderlinePaint = new Paint();
-        mSelectedUnderlinePaint.setColor(underlineColor);
+//        mSelectedUnderlinePaint.setColor(underlineColor);
 
-        setBackgroundColor(backgroundColor);
+//        setBackgroundColor(backgroundColor);
         setWillNotDraw(false);
     }
 
@@ -97,6 +97,6 @@ public class ViewPagerTabStrip extends LinearLayout {
     }
 
     private boolean isRtl() {
-        return OsUtil.isAtLeastJB_MR2() ? getLayoutDirection() == View.LAYOUT_DIRECTION_RTL : false;
+        return OsUtil.isAtLeastJB_MR2() && getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
     }
 }
