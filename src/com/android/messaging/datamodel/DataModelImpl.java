@@ -21,6 +21,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.telephony.SubscriptionManager;
 
+import androidx.sqlite.db.SupportSQLiteDatabase;
+
 import com.android.messaging.datamodel.action.ActionService;
 import com.android.messaging.datamodel.action.BackgroundWorker;
 import com.android.messaging.datamodel.action.FixupMessageStatusOnStartupAction;
@@ -202,6 +204,16 @@ public class DataModelImpl extends DataModel {
         SyncManager.resetLastSyncTimestamps();
     }
 
+    /**
+     * @param db
+     */
+    @Override
+    public void onCreateTables(SupportSQLiteDatabase db) {
+        LogUtil.w(LogUtil.BUGLE_TAG, "Rebuilt databases: reseting related state");
+        // Clear other things that implicitly reference the DB
+        SyncManager.resetLastSyncTimestamps();
+    }
+
     @Override
     public void onActivityResume() {
         // Perform an incremental sync and register for changes if necessary
@@ -211,6 +223,7 @@ public class DataModelImpl extends DataModel {
         // contact change while the activity was paused.
         ParticipantRefresh.refreshParticipantsIfNeeded();
     }
+
 
     @Override
     public void onApplicationCreated() {

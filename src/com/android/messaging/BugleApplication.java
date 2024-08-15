@@ -27,6 +27,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.telephony.CarrierConfigManager;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.mms.CarrierConfigValuesLoader;
 import androidx.appcompat.mms.MmsManager;
 
@@ -91,7 +92,7 @@ public class BugleApplication extends Application implements UncaughtExceptionHa
     }
 
     @Override
-    public void onConfigurationChanged(final Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull final Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
 
         // Update conversation drawables when changing writing systems
@@ -201,13 +202,7 @@ public class BugleApplication extends Application implements UncaughtExceptionHa
             LogUtil.e(TAG, "Uncaught exception in background thread " + thread, ex);
 
             final Handler handler = new Handler(getMainLooper());
-            handler.post(new Runnable() {
-
-                @Override
-                public void run() {
-                    sSystemUncaughtExceptionHandler.uncaughtException(thread, ex);
-                }
-            });
+            handler.post(() -> sSystemUncaughtExceptionHandler.uncaughtException(thread, ex));
         } else {
             sSystemUncaughtExceptionHandler.uncaughtException(thread, ex);
         }

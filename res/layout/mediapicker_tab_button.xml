@@ -16,9 +16,10 @@
 -->
 
 <!-- android:contentDescription is set in code -->
+<!-- SPRD:modified for bug 603603-->
 <ImageButton xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="48dp"
-    android:layout_height="48dp"
+    android:layout_width="35dp"
+    android:layout_height="35dp"
     android:background="@drawable/mediapicker_tab_button_background"
     android:contentDescription="@null">
 </ImageButton>

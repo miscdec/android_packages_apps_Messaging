@@ -21,6 +21,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import androidx.sqlite.db.SupportSQLiteDatabase;
+
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.action.Action;
 import com.android.messaging.datamodel.action.ActionService;
@@ -120,6 +122,8 @@ public abstract class DataModel {
     public abstract void onActivityResume();
 
     abstract void onCreateTables(final SQLiteDatabase db);
+
+    public abstract void onCreateTables(final SupportSQLiteDatabase db);
 
     public void setFocusedConversation(final String conversationId) {
         mFocusedConversation = conversationId;

@@ -14,13 +14,11 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/conversation_title_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_gravity="fill_horizontal" >
+    android:layout_gravity="fill_horizontal">
 
       <TextView
             android:id="@+id/conversation_title"

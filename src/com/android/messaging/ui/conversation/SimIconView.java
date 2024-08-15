@@ -17,15 +17,11 @@ package com.android.messaging.ui.conversation;
 
 import android.content.Context;
 import android.graphics.Outline;
-import android.net.Uri;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 
 import com.android.messaging.ui.ContactIconView;
-import com.android.messaging.util.Assert;
-import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.OsUtil;
 
 /**
@@ -45,12 +41,13 @@ public class SimIconView extends ContactIconView {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean performClick() {
         if (isClickable()) {
-            return super.onTouchEvent(event);
+            return super.performClick();
         }
         return true;
     }
+
 
     @Override
     protected void maybeInitializeOnClickListener() {

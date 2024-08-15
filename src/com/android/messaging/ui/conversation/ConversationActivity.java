@@ -16,6 +16,8 @@
 
 package com.android.messaging.ui.conversation;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -364,6 +366,7 @@ public class ConversationActivity extends BugleActionBarActivity
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode,
             final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ConversationFragment.REQUEST_CHOOSE_ATTACHMENTS &&
                 resultCode == RESULT_OK) {
             final ConversationFragment conversationFragment = getConversationFragment();
