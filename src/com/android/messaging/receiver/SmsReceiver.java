@@ -16,6 +16,7 @@
 
 package com.android.messaging.receiver;
 
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -25,20 +26,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.os.Build;
 import android.provider.Telephony;
 import android.provider.Telephony.Sms;
+
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationCompat.Builder;
 import androidx.core.app.NotificationCompat.Style;
 import androidx.core.app.NotificationManagerCompat;
 
-import java.util.ArrayList;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
 import com.android.messaging.Factory;
 import com.android.messaging.R;
-import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.MessageNotificationState;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.datamodel.action.ReceiveSmsMessageAction;
@@ -51,6 +49,10 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.PhoneUtils;
+
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Class that receives incoming SMS messages through android.provider.Telephony.SMS_RECEIVED
@@ -213,7 +215,7 @@ public final class SmsReceiver extends BroadcastReceiver {
         // seen for the telephony db.
         messageValues.put(Sms.Inbox.READ, 0);
         messageValues.put(Sms.Inbox.SEEN, 0);
-        if (OsUtil.isAtLeastL_MR1()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
             messageValues.put(Sms.SUBSCRIPTION_ID, subId);
         }
 
@@ -254,6 +256,7 @@ public final class SmsReceiver extends BroadcastReceiver {
         }
     }
 
+    @SuppressLint("MissingPermission")
     public static void postNewMessageSecondaryUserNotification() {
         final Context context = Factory.get().getApplicationContext();
         final Resources resources = context.getResources();
@@ -277,11 +280,15 @@ public final class SmsReceiver extends BroadcastReceiver {
         final NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(Factory.get().getApplicationContext());
 
-        int defaults = Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE;
-        notification.defaults = defaults;
+        if (notification != null) {
+            notification.defaults = Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE;
+        }
+        if (OsUtil.hasNotificationPermission()) {
+            notificationManager.notify(getNotificationTag(),
+                    PendingIntentConstants.SMS_SECONDARY_USER_NOTIFICATION_ID, notification);
+        }
 
-        notificationManager.notify(getNotificationTag(),
-                PendingIntentConstants.SMS_SECONDARY_USER_NOTIFICATION_ID, notification);
+
     }
 
     /**
