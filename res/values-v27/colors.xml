@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Copyright (C) 2015 The Android Open Source Project
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,8 +22,12 @@
     <color name="action_bar_background_color">@android:color/system_accent1_600</color>
     <color name="action_bar_background_color_dark">@*android:color/system_accent1_700</color>
     <color name="contextual_action_bar_background_color">@*android:color/system_accent1_600</color>
-    <color name="archived_conversation_action_bar_background_color">@*android:color/system_accent1_700</color>
-    <color name="archived_conversation_action_bar_background_color_dark">@*android:color/system_accent1_600</color>
+    <color name="archived_conversation_action_bar_background_color">
+        @*android:color/system_accent1_700
+    </color>
+    <color name="archived_conversation_action_bar_background_color_dark">
+        @*android:color/system_accent1_600
+    </color>
 
     <!-- Conversation list -->
     <color name="conversation_list_item_read">#636363</color>
@@ -67,7 +70,7 @@
     <color name="message_bubble_color_outgoing">#ffffffff</color>
     <color name="message_error_bubble_color_incoming">#e2e2e2</color>
     <color name="message_audio_button_color_incoming">#ffffffff</color>
-    <color name="message_bubble_color_selected">@*android:color/system_accent3_300</color>
+    <color name="message_bubble_color_selected">@color/colorAccent</color>
     <color name="message_image_selected_tint">#7f040000</color>
     <color name="generic_video_icon">#ff808080</color>
 

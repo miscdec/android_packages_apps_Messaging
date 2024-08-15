@@ -20,7 +20,7 @@
         <item name="android:background">@null</item>
         <item name="android:inputType">textEmailAddress|textMultiLine</item>
         <item name="android:minHeight">@dimen/chip_height</item>
-        <item name="android:popupBackground">@android:color/white</item>
+        <!--        <item name="android:popupBackground">@android:color/white</item>-->
         <item name="android:textAlignment" tools:ignore="NewApi">viewStart</item>
         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
         <item name="android:textDirection" tools:ignore="NewApi">locale</item>
@@ -40,12 +40,12 @@
     <style name="ChipAutocompleteDividerStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">@dimen/chip_custom_divider_height</item>
-        <item name="android:background">@color/autocomplete_divider_color</item>
+        <!--        <item name="android:background">@color/autocomplete_divider_color</item>-->
         <item name="android:layout_marginLeft">@dimen/chip_wrapper_start_padding</item>
     </style>
 
     <style name="ChipAutocompleteDividerStyle.PermissionItem">
-        <item name="android:background">@drawable/chip_autocomplete_divider_background</item>
+        <!--        <item name="android:background">@drawable/chip_autocomplete_divider_background</item>-->
         <item name="android:layout_height">3dp</item>
         <item name="android:layout_marginLeft">0dp</item>
     </style>
@@ -65,7 +65,7 @@
         <item name="android:ellipsize">middle</item>
         <item name="android:singleLine">true</item>
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:textColor">@color/chips_dropdown_text</item>
+        <!--        <item name="android:textColor">@color/chips_dropdown_text</item>-->
         <item name="android:textSize">16sp</item>
     </style>
 
@@ -76,7 +76,7 @@
         <item name="android:ellipsize">middle</item>
         <item name="android:singleLine">true</item>
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:textColor">@color/chips_dropdown_text</item>
+        <!--        <item name="android:textColor">@color/chips_dropdown_text</item>-->
         <item name="android:textSize">14sp</item>
     </style>
 
@@ -92,7 +92,7 @@
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_weight">1</item>
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:textColor">@color/chips_dropdown_permission_text</item>
+        <!--        <item name="android:textColor">@color/chips_dropdown_permission_text</item>-->
         <item name="android:textSize">16sp</item>
         <item name="android:text">@string/chips_permission_text</item>
     </style>
@@ -131,7 +131,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <!--        <item name="android:background">?android:attr/selectableItemBackground</item>-->
         <item name="android:contentDescription">@android:string/cancel</item>
         <item name="android:padding">@dimen/chip_icon_padding</item>
         <item name="android:src">@drawable/chips_ic_close_24dp</item>
