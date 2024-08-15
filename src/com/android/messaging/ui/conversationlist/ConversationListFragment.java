@@ -33,7 +33,6 @@ import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewPropertyAnimator;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.AbsListView;
-import android.widget.ImageView;
 
 import androidx.core.view.ViewCompat;
 import androidx.core.view.ViewGroupCompat;
@@ -59,6 +58,7 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.common.annotations.VisibleForTesting;
 
 import java.util.ArrayList;
@@ -79,20 +79,20 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private boolean mForwardMessageMode;
 
     public interface ConversationListFragmentHost {
-        public void onConversationClick(final ConversationListData listData,
-                                        final ConversationListItemData conversationListItemData,
-                                        final boolean isLongClick,
-                                        final ConversationListItemView conversationView);
-        public void onCreateConversationClick();
-        public boolean isConversationSelected(final String conversationId);
-        public boolean isSwipeAnimatable();
-        public boolean isSelectionMode();
-        public boolean hasWindowFocus();
+        void onConversationClick(final ConversationListData listData,
+                                 final ConversationListItemData conversationListItemData,
+                                 final boolean isLongClick,
+                                 final ConversationListItemView conversationView);
+        void onCreateConversationClick();
+        boolean isConversationSelected(final String conversationId);
+        boolean isSwipeAnimatable();
+        boolean isSelectionMode();
+        boolean hasWindowFocus();
     }
 
     private ConversationListFragmentHost mHost;
     private RecyclerView mRecyclerView;
-    private ImageView mStartNewConversationButton;
+    private ExtendedFloatingActionButton mStartNewConversationButton;
     private ListEmptyView mEmptyListMessageView;
     private ConversationListAdapter mAdapter;
 
@@ -174,8 +174,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             final Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.conversation_list_fragment,
                 container, false);
-        mRecyclerView = (RecyclerView) rootView.findViewById(android.R.id.list);
-        mEmptyListMessageView = (ListEmptyView) rootView.findViewById(R.id.no_conversations_view);
+        mRecyclerView = rootView.findViewById(android.R.id.list);
+        mEmptyListMessageView = rootView.findViewById(R.id.no_conversations_view);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
         // The default behavior for default layout param generation by LinearLayoutManager is to
         // provide width and height of WRAP_CONTENT, but this is not desirable for
@@ -220,7 +220,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             mListState = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_LIST_VIEW_STATE_KEY);
         }
 
-        mStartNewConversationButton = (ImageView) rootView.findViewById(
+        mStartNewConversationButton = rootView.findViewById(
                 R.id.start_new_conversation_button);
         if (mArchiveMode) {
             mStartNewConversationButton.setVisibility(View.GONE);

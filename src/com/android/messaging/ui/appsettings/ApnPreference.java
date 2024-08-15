@@ -17,15 +17,14 @@
 package com.android.messaging.ui.appsettings;
 
 import android.content.Context;
-import android.preference.Preference;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.CompoundButton;
-import android.widget.RadioButton;
-import android.widget.RelativeLayout;
+
+import androidx.annotation.NonNull;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceViewHolder;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ParticipantData;
@@ -54,42 +53,47 @@ public class ApnPreference extends Preference implements
 
     private static String mSelectedKey = null;
     private static CompoundButton mCurrentChecked = null;
-    private boolean mProtectFromCheckedChange = false;
+    private final boolean mProtectFromCheckedChange = false;
     private boolean mSelectable = true;
     private int mSubId = ParticipantData.DEFAULT_SELF_SUB_ID;
 
     @Override
-    public View getView(View convertView, ViewGroup parent) {
-        View view = super.getView(convertView, parent);
-
-        View widget = view.findViewById(R.id.apn_radiobutton);
-        if ((widget != null) && widget instanceof RadioButton) {
-            RadioButton rb = (RadioButton) widget;
-            if (mSelectable) {
-                rb.setOnCheckedChangeListener(this);
-
-                boolean isChecked = getKey().equals(mSelectedKey);
-                if (isChecked) {
-                    mCurrentChecked = rb;
-                    mSelectedKey = getKey();
-                }
-
-                mProtectFromCheckedChange = true;
-                rb.setChecked(isChecked);
-                mProtectFromCheckedChange = false;
-            } else {
-                rb.setVisibility(View.GONE);
-            }
-            rb.setContentDescription(getTitle());
-        }
-
-        View textLayout = view.findViewById(R.id.text_layout);
-        if ((textLayout != null) && textLayout instanceof RelativeLayout) {
-            textLayout.setOnClickListener(this);
-        }
-
-        return view;
+    public void onBindViewHolder(@NonNull PreferenceViewHolder holder) {
+        super.onBindViewHolder(holder);
     }
+
+//    @Override
+//    public View getView(View convertView, ViewGroup parent) {
+////        View view = super.getView(convertView, parent);
+//
+//        View widget = view.findViewById(R.id.apn_radiobutton);
+//        if ((widget != null) && widget instanceof RadioButton) {
+//            RadioButton rb = (RadioButton) widget;
+//            if (mSelectable) {
+//                rb.setOnCheckedChangeListener(this);
+//
+//                boolean isChecked = getKey().equals(mSelectedKey);
+//                if (isChecked) {
+//                    mCurrentChecked = rb;
+//                    mSelectedKey = getKey();
+//                }
+//
+//                mProtectFromCheckedChange = true;
+//                rb.setChecked(isChecked);
+//                mProtectFromCheckedChange = false;
+//            } else {
+//                rb.setVisibility(View.GONE);
+//            }
+//            rb.setContentDescription(getTitle());
+//        }
+//
+//        View textLayout = view.findViewById(R.id.text_layout);
+//        if ((textLayout != null) && textLayout instanceof RelativeLayout) {
+//            textLayout.setOnClickListener(this);
+//        }
+//
+//        return view;
+//    }
 
     public boolean isChecked() {
         return getKey().equals(mSelectedKey);

@@ -29,7 +29,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceScreen;
-import androidx.preference.SwitchPreference;
+import androidx.preference.SwitchPreferenceCompat;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.LicenseActivity;
@@ -109,7 +109,7 @@ public class ApplicationSettingsActivity extends AppCompatActivity {
             mSmsEnabledPreference = findPreference(mSmsEnabledPrefKey);
             String mSwipeRightToDeleteConversationkey = getString(
                     R.string.swipe_right_deletes_conversation_key);
-            SwitchPreference mSwipeRightToDeleteConversationPreference = (SwitchPreference) findPreference(mSwipeRightToDeleteConversationkey);
+            SwitchPreferenceCompat mSwipeRightToDeleteConversationPreference = findPreference(mSwipeRightToDeleteConversationkey);
             mIsSmsPreferenceClicked = false;
 
             if (!DebugUtils.isDebugEnabled()) {
@@ -118,7 +118,7 @@ public class ApplicationSettingsActivity extends AppCompatActivity {
                 getPreferenceScreen().removePreference(debugCategory);
             }
 
-            final PreferenceScreen advancedScreen = (PreferenceScreen) findPreference(
+            final PreferenceScreen advancedScreen = findPreference(
                     getString(R.string.advanced_pref_key));
             final boolean topLevel = getActivity().getIntent().getBooleanExtra(
                     UIIntents.UI_INTENT_EXTRA_TOP_LEVEL_SETTINGS, false);

@@ -16,23 +16,24 @@
 
 package com.android.messaging.ui.appsettings;
 
-import android.app.FragmentTransaction;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceCategory;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.mms.MmsManager;
 import androidx.core.app.NavUtils;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.Preference;
+import androidx.preference.Preference.OnPreferenceClickListener;
+import androidx.preference.PreferenceCategory;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceScreen;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
@@ -62,7 +63,7 @@ public class PerSubscriptionSettingsActivity extends BugleActionBarActivity {
             // This will fall back to the default title, i.e. "Messaging settings," so No-op.
         }
 
-        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+        final FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         final PerSubscriptionSettingsFragment fragment = new PerSubscriptionSettingsFragment();
         ft.replace(android.R.id.content, fragment);
         ft.commit();
@@ -78,12 +79,12 @@ public class PerSubscriptionSettingsActivity extends BugleActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class PerSubscriptionSettingsFragment extends PreferenceFragment
+    public static class PerSubscriptionSettingsFragment extends PreferenceFragmentCompat
             implements OnSharedPreferenceChangeListener {
-        private PhoneNumberPreference mPhoneNumberPreference;
+        //        private PhoneNumberPreference mPhoneNumberPreference;
         private Preference mGroupMmsPreference;
         private String mGroupMmsPrefKey;
-        private String mPhoneNumberKey;
+        //        private String mPhoneNumberKey;
         private int mSubId;
 
         public PerSubscriptionSettingsFragment() {
@@ -104,15 +105,13 @@ public class PerSubscriptionSettingsActivity extends BugleActionBarActivity {
             getPreferenceManager().setSharedPreferencesName(subPrefs.getSharedPreferencesName());
             addPreferencesFromResource(R.xml.preferences_per_subscription);
 
-            mPhoneNumberKey = getString(R.string.mms_phone_number_pref_key);
-            mPhoneNumberPreference = (PhoneNumberPreference) findPreference(mPhoneNumberKey);
-            final PreferenceCategory advancedCategory = (PreferenceCategory)
-                    findPreference(getString(R.string.advanced_category_pref_key));
-            final PreferenceCategory mmsCategory = (PreferenceCategory)
-                    findPreference(getString(R.string.mms_messaging_category_pref_key));
+//            mPhoneNumberKey = getString(R.string.mms_phone_number_pref_key);
+//            mPhoneNumberPreference = (PhoneNumberPreference) findPreference(mPhoneNumberKey);
+            final PreferenceCategory advancedCategory = findPreference(getString(R.string.advanced_category_pref_key));
+            final PreferenceCategory mmsCategory = findPreference(getString(R.string.mms_messaging_category_pref_key));
 
-            mPhoneNumberPreference.setDefaultPhoneNumber(
-                    PhoneUtils.get(mSubId).getCanonicalForSelf(false/*allowOverride*/), mSubId);
+//            mPhoneNumberPreference.setDefaultPhoneNumber(
+//                    PhoneUtils.get(mSubId).getCanonicalForSelf(false/*allowOverride*/), mSubId);
 
             mGroupMmsPrefKey = getString(R.string.group_mms_pref_key);
             mGroupMmsPreference = findPreference(mGroupMmsPrefKey);
@@ -162,7 +161,7 @@ public class PerSubscriptionSettingsActivity extends BugleActionBarActivity {
 
             // Access Point Names (APNs)
             final PreferenceScreen apnsScreen =
-                    (PreferenceScreen) findPreference(getString(R.string.sms_apns_key));
+                    findPreference(getString(R.string.sms_apns_key));
 
             if (!MmsManager.shouldUseLegacyMms()
                     || (MmsUtils.useSystemApnTable() && !ApnDatabase.doesDatabaseExist())) {
@@ -171,7 +170,7 @@ public class PerSubscriptionSettingsActivity extends BugleActionBarActivity {
                 // access the system APN, but we can't find the MCC/MNC in the APN table and we
                 // created the local APN table in case the MCC/MNC was in there. In other words,
                 // if the local APN table exists, let the user edit it.
-                advancedCategory.removePreference((Preference) apnsScreen);
+                advancedCategory.removePreference(apnsScreen);
             } else {
                 apnsScreen.setIntent(UIIntents.get()
                         .getApnSettingsIntent(getPreferenceScreen().getContext(), mSubId));
@@ -194,6 +193,21 @@ public class PerSubscriptionSettingsActivity extends BugleActionBarActivity {
             if (advancedCategory.getPreferenceCount() == 0) {
                 getPreferenceScreen().removePreference(advancedCategory);
             }
+        }
+
+        /**
+         * Called during {@link #onCreate(Bundle)} to supply the preferences for this fragment.
+         * Subclasses are expected to call {@link #setPreferenceScreen(PreferenceScreen)} either
+         * directly or via helper methods such as {@link #addPreferencesFromResource(int)}.
+         *
+         * @param savedInstanceState If the fragment is being re-created from a previous saved state,
+         *                           this is the state.
+         * @param rootKey            If non-null, this preference fragment should be rooted at the
+         *                           {@link PreferenceScreen} with this key.
+         */
+        @Override
+        public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+
         }
 
         private boolean isCellBroadcastAppLinkEnabled() {
@@ -229,20 +243,21 @@ public class PerSubscriptionSettingsActivity extends BugleActionBarActivity {
                 final String key) {
             if (key.equals(mGroupMmsPrefKey)) {
                 updateGroupMmsPrefSummary();
-            } else if (key.equals(mPhoneNumberKey)) {
+            }
+//            else if (key.equals(mPhoneNumberKey)) {
                 // Save the changed phone number in preferences specific to the sub id
-                final String newPhoneNumber = mPhoneNumberPreference.getText();
-                final BuglePrefs subPrefs = BuglePrefs.getSubscriptionPrefs(mSubId);
-                if (TextUtils.isEmpty(newPhoneNumber)) {
-                    subPrefs.remove(mPhoneNumberKey);
-                } else {
-                    subPrefs.putString(getString(R.string.mms_phone_number_pref_key),
-                            newPhoneNumber);
-                }
+//                final String newPhoneNumber = mPhoneNumberPreference.getText();
+//                final BuglePrefs subPrefs = BuglePrefs.getSubscriptionPrefs(mSubId);
+//                if (TextUtils.isEmpty(newPhoneNumber)) {
+//                    subPrefs.remove(mPhoneNumberKey);
+//                } else {
+//                    subPrefs.putString(getString(R.string.mms_phone_number_pref_key),
+//                            newPhoneNumber);
+//                }
                 // Update the self participants so the new phone number will be reflected
                 // everywhere in the UI.
                 ParticipantRefresh.refreshSelfParticipants();
-            }
+//            }
         }
 
         @Override

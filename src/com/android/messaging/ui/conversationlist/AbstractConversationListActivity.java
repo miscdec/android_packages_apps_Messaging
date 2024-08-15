@@ -86,6 +86,7 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
 
     protected void startMultiSelectActionMode() {
         startActionMode(new MultiSelectActionModeCallback(this));
+        mConversationListFragment.dismissFab();
     }
 
     protected void exitMultiSelectState() {
@@ -249,7 +250,8 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
     public void onConversationClick(final ConversationListData listData,
                                     final ConversationListItemData conversationListItemData,
                                     final boolean isLongClick,
-                                    final ConversationListItemView conversationView) {
+                                    final ConversationListItemView conversationView
+    ) {
         if (isLongClick && !isInConversationListSelectMode()) {
             startMultiSelectActionMode();
         }

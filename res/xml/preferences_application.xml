@@ -54,14 +54,14 @@
         android:defaultValue="@bool/show_emoticons_pref_default"
         android:summary="@string/show_emoticons_pref_summary" />
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:key="@string/swipe_right_deletes_conversation_key"
         android:title="@string/swipe_to_delete_conversation_pref_title"
         android:summary="@string/swipe_to_delete_conversation_pref_summary"
         android:defaultValue="false"
         android:persistent="true" />
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="@bool/captcha_detector_default"
         android:key="@string/captcha_detector_key"
         android:persistent="true"

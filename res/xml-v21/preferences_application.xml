@@ -36,7 +36,7 @@
         </intent>
     </PreferenceScreen>
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:key="@string/send_sound_pref_key"
         android:title="@string/send_sound_pref_title"
         android:defaultValue="@bool/send_sound_pref_default"
@@ -47,21 +47,21 @@
         android:title="@string/notifications_pref_title"
         android:persistent="true" />
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:key="pref_show_emoticons"
         android:title="@string/show_emoticons_pref_title"
         android:persistent="true"
         android:defaultValue="@bool/show_emoticons_pref_default"
         android:summary="@string/show_emoticons_pref_summary" />
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:key="@string/swipe_right_deletes_conversation_key"
         android:title="@string/swipe_to_delete_conversation_pref_title"
         android:summary="@string/swipe_to_delete_conversation_pref_summary"
         android:defaultValue="false"
         android:persistent="true" />
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:defaultValue="@bool/captcha_detector_default"
         android:key="@string/captcha_detector_key"
         android:persistent="true"
@@ -82,13 +82,13 @@
         android:key="@string/debug_pref_key"
         android:title="@string/debug_category_pref_title">
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="@string/dump_sms_pref_key"
             android:title="@string/dump_sms_pref_title"
             android:summary="@string/dump_sms_pref_summary"
             android:defaultValue="@bool/dump_sms_pref_default" />
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="@string/dump_mms_pref_key"
             android:title="@string/dump_mms_pref_title"
             android:summary="@string/dump_mms_pref_summary"

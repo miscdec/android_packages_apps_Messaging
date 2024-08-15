@@ -16,7 +16,7 @@
 
 package com.android.messaging.ui.appsettings;
 
-import android.app.Activity;
+
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
@@ -30,18 +30,21 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.os.UserManager;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceGroup;
-import android.preference.PreferenceScreen;
 import android.provider.Telephony;
-import androidx.core.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.NavUtils;
+import androidx.preference.Preference;
+import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceGroup;
+import androidx.preference.PreferenceScreen;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ParticipantData;
@@ -65,7 +68,7 @@ public class ApnSettingsActivity extends BugleActionBarActivity {
         final ApnSettingsFragment fragment = new ApnSettingsFragment();
         fragment.setSubId(getIntent().getIntExtra(UIIntents.UI_INTENT_EXTRA_SUB_ID,
                 ParticipantData.DEFAULT_SELF_SUB_ID));
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .replace(android.R.id.content, fragment)
                 .commit();
     }
@@ -91,7 +94,7 @@ public class ApnSettingsActivity extends BugleActionBarActivity {
         return null;
     }
 
-    public static class ApnSettingsFragment extends PreferenceFragment implements
+    public static class ApnSettingsFragment extends PreferenceFragmentCompat implements
             Preference.OnPreferenceChangeListener {
         public static final String EXTRA_POSITION = "position";
 
@@ -152,7 +155,7 @@ public class ApnSettingsActivity extends BugleActionBarActivity {
             mDatabase = ApnDatabase.getApnDatabase().getWritableDatabase();
 
             if (OsUtil.isAtLeastL()) {
-                mUm = (UserManager) getActivity().getSystemService(Context.USER_SERVICE);
+                mUm = (UserManager) getContext().getSystemService(Context.USER_SERVICE);
                 if (!mUm.hasUserRestriction(UserManager.DISALLOW_CONFIG_MOBILE_NETWORKS)) {
                     setHasOptionsMenu(true);
                 }
@@ -161,12 +164,27 @@ public class ApnSettingsActivity extends BugleActionBarActivity {
             }
         }
 
+        /**
+         * Called during {@link #onCreate(Bundle)} to supply the preferences for this fragment.
+         * Subclasses are expected to call {@link #setPreferenceScreen(PreferenceScreen)} either
+         * directly or via helper methods such as {@link #addPreferencesFromResource(int)}.
+         *
+         * @param savedInstanceState If the fragment is being re-created from a previous saved state,
+         *                           this is the state.
+         * @param rootKey            If non-null, this preference fragment should be rooted at the
+         *                           {@link PreferenceScreen} with this key.
+         */
+        @Override
+        public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+
+        }
+
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
 
-            final ListView lv = (ListView) getView().findViewById(android.R.id.list);
-            TextView empty = (TextView) getView().findViewById(android.R.id.empty);
+            final ListView lv = getView().findViewById(android.R.id.list);
+            TextView empty = getView().findViewById(android.R.id.empty);
             if (empty != null) {
                 empty.setText(R.string.apn_settings_not_available);
                 lv.setEmptyView(empty);
@@ -202,7 +220,6 @@ public class ApnSettingsActivity extends BugleActionBarActivity {
             super.onPause();
 
             if (mUnavailable) {
-                return;
             }
         }
 
@@ -232,8 +249,7 @@ public class ApnSettingsActivity extends BugleActionBarActivity {
                 protected void onPostExecute(Cursor cursor) {
                     if (cursor != null) {
                         try {
-                            PreferenceGroup apnList = (PreferenceGroup)
-                                    findPreference(getString(R.string.apn_list_pref_key));
+                            PreferenceGroup apnList = findPreference(getString(R.string.apn_list_pref_key));
                             apnList.removeAll();
 
                             mSelectedKey = BugleApnSettingsLoader.getFirstTryApn(mDatabase, mccMnc);
@@ -302,16 +318,17 @@ public class ApnSettingsActivity extends BugleActionBarActivity {
             startActivity(UIIntents.get().getApnEditorIntent(getActivity(), null, mSubId));
         }
 
+
         @Override
-        public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
-                Preference preference) {
+        public boolean onPreferenceTreeClick(@NonNull Preference preference) {
             startActivity(
                     UIIntents.get().getApnEditorIntent(getActivity(), preference.getKey(), mSubId));
             return true;
         }
 
+
         @Override
-        public boolean onPreferenceChange(Preference preference, Object newValue) {
+        public boolean onPreferenceChange(@NonNull Preference preference, Object newValue) {
             if (newValue instanceof String) {
                 setSelectedApnKey((String) newValue);
             }
@@ -345,7 +362,7 @@ public class ApnSettingsActivity extends BugleActionBarActivity {
         }
 
         private boolean restoreDefaultApn() {
-            getActivity().showDialog(DIALOG_RESTORE_DEFAULTAPN);
+            requireActivity().showDialog(DIALOG_RESTORE_DEFAULTAPN);
             mRestoreDefaultApnMode = true;
 
             if (mRestoreApnUiHandler == null) {
@@ -373,9 +390,8 @@ public class ApnSettingsActivity extends BugleActionBarActivity {
                         fillList();
                         getPreferenceScreen().setEnabled(true);
                         mRestoreDefaultApnMode = false;
-                        final Activity activity = getActivity();
-                        activity.dismissDialog(DIALOG_RESTORE_DEFAULTAPN);
-                        Toast.makeText(activity, getResources().getString(
+                        requireActivity().dismissDialog(DIALOG_RESTORE_DEFAULTAPN);
+                        Toast.makeText(requireContext(), getResources().getString(
                                         R.string.restore_default_apn_completed), Toast.LENGTH_LONG)
                                             .show();
                         break;
@@ -384,7 +400,7 @@ public class ApnSettingsActivity extends BugleActionBarActivity {
         }
 
         private class RestoreApnProcessHandler extends Handler {
-            private Handler mCachedRestoreApnUiHandler;
+            private final Handler mCachedRestoreApnUiHandler;
 
             public RestoreApnProcessHandler(Looper looper, Handler restoreApnUiHandler) {
                 super(looper);
