@@ -60,11 +60,11 @@ static const ColorARGB TRANSPARENT = 0x0;
 namespace {
 
 // Current time in milliseconds since Unix epoch.
-double now(void) {
-    struct timespec res;
-    clock_gettime(CLOCK_REALTIME, &res);
-    return 1000.0 * res.tv_sec + (double) res.tv_nsec / 1e6;
-}
+//double now(void) {
+//    struct timespec res;
+//    clock_gettime(CLOCK_REALTIME, &res);
+//    return 1000.0 * res.tv_sec + (double) res.tv_nsec / 1e6;
+//}
 
 // Gets the pixel at position (x,y) from a buffer that uses row-major order to store an image with
 // the specified width.
@@ -77,7 +77,7 @@ T* getPixel(T* buffer, int width, int x, int y) {
 
 int GifTranscoder::transcode(const char* pathIn, const char* pathOut) {
     int error;
-    double t0;
+//    double t0;
     GifFileType* gifIn;
     GifFileType* gifOut;
 
@@ -102,7 +102,7 @@ int GifTranscoder::transcode(const char* pathIn, const char* pathOut) {
         return GIF_ERROR;
     }
 
-    t0 = now();
+//    t0 = now();
     if (resizeBoxFilter(gifIn, gifOut)) {
         LOGD("Resized GIF in %.2f ms", now() - t0);
     } else {

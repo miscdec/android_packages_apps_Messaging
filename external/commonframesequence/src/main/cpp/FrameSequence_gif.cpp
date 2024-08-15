@@ -59,7 +59,7 @@ FrameSequence_gif::FrameSequence_gif(Stream* stream) :
         return;
     }
 
-    long durationMs = 0;
+//    long durationMs = 0;
     int lastUnclearedFrame = -1;
     mPreservedFrames = new bool[mGif->ImageCount];
     mRestoringFrames = new int[mGif->ImageCount];
@@ -87,7 +87,7 @@ FrameSequence_gif::FrameSequence_gif(Stream* stream) :
         DGifSavedExtensionToGCB(mGif, i, &gcb);
 
         // timing
-        durationMs += getDelayMs(gcb);
+//        durationMs += getDelayMs(gcb);
 
         // preserve logic
         mPreservedFrames[i] = false;
