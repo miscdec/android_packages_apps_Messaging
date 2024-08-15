@@ -142,12 +142,12 @@ class SearchViewModel : ViewModel() {
 
     private fun handleIntent() {
         viewModelScope.launch {
-            newsChannel.consumeAsFlow().collect() {
+            newsChannel.consumeAsFlow().collect {
                 when (it) {
                     is SearchIntent.GetSearchResult -> search(
                         conversationId = it.conversationId,
                         searchKey = it.key
-                    );
+                    )
                 }
             }
         }
@@ -186,7 +186,7 @@ class SearchViewModel : ViewModel() {
                             )
                         val textStr =
                             cursor.getString(cursor.getColumnIndex(DatabaseHelper.PartColumns.TEXT))
-                        val contentType = cursor.getString(cursor.getColumnIndex("content_type"))
+                        cursor.getString(cursor.getColumnIndex("content_type"))
                         val messageId = cursor.getInt(cursor.getColumnIndex("message_id"))
                         val searchViewBean = SearchBean(
                             conversationId = conversationId.toString(),

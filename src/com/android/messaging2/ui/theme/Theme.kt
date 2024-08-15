@@ -64,7 +64,6 @@ fun MessagingTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
         content = content
     )
 }
